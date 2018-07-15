@@ -22,6 +22,10 @@ public class Area {
     @JoinColumn(name = "route_id")
     private List<Route> routes = new ArrayList<>();
 
+//    @OneToMany
+//    @JoinColumn(name = "crag_id")
+//    private List<Crag> crags = new ArrayList<>();
+
     public Area() {}
 
     public Area(String name) {
