@@ -1,9 +1,6 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.User;
-import com.sendfriend.models.data.AreaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,12 +20,12 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-    @Autowired
-    RouteDao routeDao;
-
-    @Autowired
-    AreaDao areaDao;
-
+//    @Autowired
+//    RouteDao routeDao;
+//
+//    @Autowired
+//    AreaDao areaDao;
+//
 //    @Autowired
 //    CragDao cragDao;
 
@@ -37,9 +34,9 @@ public class UserController {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users",userDao.findAll());
-        model.addAttribute("routes",routeDao.findAll());
+//        model.addAttribute("routes",routeDao.findAll());
 //        model.addAttribute("crags",cragDao.findAll());
-        model.addAttribute("areas",areaDao.findAll());
+//        model.addAttribute("areas",areaDao.findAll());
 
         return "user/index";
     }
