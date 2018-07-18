@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping(value = "")
+@RequestMapping(value = "user")
 public class UserController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     RouteDao routeDao;
 
-    @RequestMapping(value = "index")
+    @RequestMapping(value = " ")
     public String index(Model model) {
 
         return "user/index";
@@ -36,9 +36,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String processRegisterForm(Model model, @ModelAttribute @Valid User user, Errors errors) {
+    public String processRegisterForm(Model model, @ModelAttribute @Valid User user, Errors errors, String verify) {
 
-        if (errors.hasErrors()) {
+        if (errors.hasErrors() || !verify.equals(user.getPassword())) {
             model.addAttribute("title", "Register New User");
 
             return "user/register";
