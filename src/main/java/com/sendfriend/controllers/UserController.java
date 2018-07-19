@@ -1,6 +1,7 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.User;
+import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +21,8 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-//    @Autowired
-//    RouteDao routeDao;
+    @Autowired
+    RouteDao routeDao;
 //
 //    @Autowired
 //    AreaDao areaDao;
