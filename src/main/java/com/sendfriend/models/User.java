@@ -16,7 +16,7 @@ public class User {
     private String password;
 
     @NotNull
-    @Size(min =4, max = 15)
+    @Size(min =4, max = 15, message = "Username must be between 4-15 characters.")
     private String username;
 
     @NotNull

@@ -20,23 +20,11 @@ public class UserController {
     @Autowired
     UserDao userDao;
 
-//    @Autowired
-//    RouteDao routeDao;
-//
-//    @Autowired
-//    AreaDao areaDao;
-//
-//    @Autowired
-//    CragDao cragDao;
-
     @RequestMapping(value = "")
     public String index(Model model) {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users",userDao.findAll());
-//        model.addAttribute("routes",routeDao.findAll());
-//        model.addAttribute("crags",cragDao.findAll());
-//        model.addAttribute("areas",areaDao.findAll());
 
         return "user/index";
     }
@@ -51,17 +39,15 @@ public class UserController {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String processRegisterForm(Model model, @ModelAttribute @Valid User user, Errors errors, String verify) {
+    public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model, String verify) {
 
         List<User> foundName = userDao.findByUsername(user.getUsername());
 
-        if (errors.hasErrors() || !verify.equals(user.getPassword()) || foundName.equals(user.getUsername())) {
+        if (errors.hasErrors() || !verify.equals(user.getPassword()) || (foundName.equals(user.getUsername()) && user.getUsername() == null)) {
             model.addAttribute("title", "Sendfriend | Register New User");
 
             return "user/register";
         }
-
-
 
         userDao.save(user);
 
