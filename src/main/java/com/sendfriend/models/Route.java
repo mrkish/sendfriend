@@ -13,6 +13,7 @@ public class Route {
     private int id;
 
     @NotNull
+    @Size(min = 1, max = 25)
     private String name;
 
     private String grade;
@@ -25,6 +26,12 @@ public class Route {
 
     public Route(String name) {
         this.name = name;
+    }
+
+    public Route(String name, String grade, String description) {
+        this.name = name;
+        this.grade = grade;
+        this.description = description;
     }
 
     public int getId() {

@@ -34,6 +34,7 @@ public class RouteController {
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
     public String displayRouteAddForm(Model model) {
+
         model.addAttribute("title", "Add Route!");
         model.addAttribute(new Route());
 
@@ -41,8 +42,9 @@ public class RouteController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processRouteAddForm(Model model, Errors errors, @ModelAttribute @Valid Route route) {
+    public String processRouteAddForm(Model model, @ModelAttribute @Valid Route route, Errors errors) {
 
+        routeDao.save(route);
 
         return "route/index";
     }
