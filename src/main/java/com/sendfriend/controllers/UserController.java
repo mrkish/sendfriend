@@ -23,12 +23,6 @@ public class UserController {
 
     @Autowired
     RouteDao routeDao;
-//
-//    @Autowired
-//    AreaDao areaDao;
-//
-//    @Autowired
-//    CragDao cragDao;
 
     @RequestMapping(value = "")
     public String index(Model model) {
