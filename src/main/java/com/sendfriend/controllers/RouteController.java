@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "route")
@@ -43,6 +44,17 @@ public class RouteController {
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
     public String processRouteAddForm(Model model, @ModelAttribute @Valid Route route, Errors errors) {
+
+        List<Route> routeNames = routeDao.findByName(route.getName());
+
+
+        if (errors.hasErrors()) {
+
+            model.addAttribute("route", route);
+            model.addAttribute("title", "Add Route!");
+
+            return "route/add";
+        }
 
         routeDao.save(route);
 

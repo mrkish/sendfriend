@@ -3,6 +3,8 @@ package com.sendfriend.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -21,6 +23,10 @@ public class User {
 
     @NotNull
     private String email;
+
+    @OneToMany
+    @JoinTable(name = "user_id")
+    private List<Route> routes = new ArrayList<>();
 
     public User(String username, String password, String email) {
         this.username = username;

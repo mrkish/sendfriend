@@ -22,6 +22,9 @@ public class Route {
 
     private double rating;
 
+    @ManyToOne
+    private User user;
+
     public Route() {};
 
     public Route(String name) {
