@@ -6,5 +6,18 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<table class="table">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+    </tr>
+    <tr th:each="route : ${routes}">
+        <td th:text="*{route.name}"></td>
+        <td th:text="*{route.description}"></td>
+        <td><a th:href="'/route/edit/' + ${route.id}">Edit</a></td>
+    </tr>
+</table>
+
 </body>
 </html>

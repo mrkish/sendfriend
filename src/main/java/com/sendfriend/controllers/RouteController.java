@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -39,7 +40,6 @@ public class RouteController {
         model.addAttribute("title", "Add Route!");
         model.addAttribute(new Route());
 
-
         return "route/add";
     }
 
@@ -62,4 +62,30 @@ public class RouteController {
         return "route/index";
     }
 
+    @RequestMapping(value = "edit", method = RequestMethod.GET)
+    public String displayEditRouteForm(Model model) {
+
+        model.addAttribute("title", "Edit Route");
+        model.addAttribute(new Route());
+
+        return "route/edit";
+    }
+
+    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    public String displayEditRouteForm(Model model, @ModelAttribute @Valid Route route, Errors errors) {
+
+
+
+        return "redirect:/route/view/" + route.getId();
+    }
+
+    @RequestMapping(value = "view/{routeId}", method = RequestMethod.GET)
+    public String displaySingleRoute(Model model, @PathVariable int routeId) {
+
+        Route route = routeDao.findById(routeId);
+        model.addAttribute("title", "Route: " + route.getName());
+        model.addAttribute("route", route);
+
+        return "route/view";
+    }
 }
