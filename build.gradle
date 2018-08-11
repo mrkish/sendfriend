@@ -28,6 +28,10 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-thymeleaf')
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+<<<<<<< HEAD
+=======
+    compile('org.springframework.boot:spring-boot-starter-security')
+>>>>>>> 887db3628cf63e6f2db59dc58f38c03a689105ca
 	compile('mysql:mysql-connector-java')
 	runtime('org.springframework.boot:spring-boot-devtools')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
