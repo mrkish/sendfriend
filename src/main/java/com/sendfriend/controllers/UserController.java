@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class UserController {
     RouteDao routeDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, @CookieValue(value = "user", defaultValue =  "none")) {
+    public String index(Model model)  {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users",userDao.findAll());
@@ -49,7 +50,7 @@ public class UserController {
 
         List<User> foundName = userDao.findByUsername(user.getUsername());
 
-        if (errors.hasErrors() || !verify.equals(user.getPassword()) || (foundName.equals(user.getUsername()) && user.getUsername() == null)) {
+        if (errors.hasErrors()) {
             model.addAttribute("title", "Sendfriend | Register New User");
 
             return "user/register";
@@ -62,15 +63,13 @@ public class UserController {
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String displayLogin(Model model) {
-
-
         model.addAttribute("title", "Sendfriend | Login!");
 
         return "user/login";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String processLogin(Model model, @ModelAttribute @Valid User user) {
+    public String processLogin(Model model, @ModelAttribute @Valid User user, HttpServletResponse response) {
         List<User> userExists = userDao.findByUsername(user.getUsername());
         if (userExists.isEmpty()) {
             model.addAttribute("title", "Sendfriend | Login!");
@@ -79,6 +78,12 @@ public class UserController {
         User loggedIn = userExists.get(0);
         if (loggedIn.getPassword().equals(user.getPassword())) {
             Cookie c = new Cookie("user",user.getUsername());
+            c.setPath("/");
+            response.addCookie(c);
+            return "redirect:/user";
+        } else {
+            model.addAttribute("title", "Login!");
+            model.addAttribute("error", "Login failed!");
         }
 
         return "redirect:index/";
