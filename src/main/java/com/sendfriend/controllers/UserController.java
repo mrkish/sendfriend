@@ -29,15 +29,15 @@ public class UserController {
     RouteDao routeDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, HttpServletRequest request)  {
+    public String index(Model model, @CookieValue(value = "user", defaultValue = "none") String username)  {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users",userDao.findAll());
 
-        if(request.getParameter("user") != null) {
-            List<User> user = userDao.findByUsername(request.getParameter("user"));
+        if(!username.equals("none")) {
+            List<User> user = userDao.findByUsername(username);
             User loggedIn = user.get(0);
-            model.addAttribute("user", user);
+            model.addAttribute("user",loggedIn);
         }
 
         return "user/index";
@@ -62,37 +62,37 @@ public class UserController {
 
             return "user/register";
         }
-
         userDao.save(user);
-
         return "redirect:index/";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
     public String displayLogin(Model model) {
         model.addAttribute("title", "Sendfriend | Login!");
-
         return "user/login";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
     public String processLogin(Model model, String username, String password, HttpServletResponse response) {
+
         List<User> userExists = userDao.findByUsername(username);
-        if (userExists.isEmpty()) {
-            model.addAttribute("title", "Sendfriend | Login!");
+
+        if (userExists.isEmpty()) { model.addAttribute("title", "Sendfriend | Login!");
             model.addAttribute("errors", "Login failed");
         }
+
         User loggedIn = userExists.get(0);
         if (loggedIn.getPassword().equals(password)) {
             Cookie c = new Cookie("user",loggedIn.getUsername());
             c.setPath("/");
             response.addCookie(c);
+
             return "redirect:/";
-        } else {
-            model.addAttribute("title", "Login!");
-            model.addAttribute("error", "Login failed!");
         }
 
-        return "redirect:/";
+        model.addAttribute("title", "Login!");
+        model.addAttribute("error", "Login failed!");
+
+        return "redirect:/login";
     }
  }
