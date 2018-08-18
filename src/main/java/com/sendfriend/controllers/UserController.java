@@ -95,4 +95,19 @@ public class UserController {
 
         return "redirect:/login";
     }
+
+    @RequestMapping(value = "logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                c.setMaxAge(0);
+                c.setPath("/");
+                response.addCookie(c);
+            }
+        }
+        return "user/login";
+    }
  }
