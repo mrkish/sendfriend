@@ -28,12 +28,13 @@
                     <a class="nav-link" href="/crag">Crags</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="Areas">Areas</a>
+                    <a class="nav-link" href="/area">Areas</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a th:unless="${user}" class="nav-link" href="/login">Login</a>
+                    <a th:if="${user}" class="nav-link" href="/logout">Log Out</a>
                 </li>
-                <li class="nav-item">
+                <li th:unless="${user}" class="nav-item">
                     <a class="nav-link" href="/register">Register</a>
                 </li>
             </ul>

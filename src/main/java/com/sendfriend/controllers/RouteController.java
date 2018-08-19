@@ -1,6 +1,7 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.Route;
+import com.sendfriend.models.User;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -26,10 +32,10 @@ public class RouteController {
     RouteDao routeDao;
 
     @RequestMapping(value = "")
-    public String routeIndex(Model model) {
+    public String routeIndex(Model model, HttpServletRequest request) {
 
         model.addAttribute("routes", routeDao.findAll());
-        model.addAttribute("title", "All Routes");
+        model.addAttribute("title", " Routes");
 
         return "route/index";
     }
