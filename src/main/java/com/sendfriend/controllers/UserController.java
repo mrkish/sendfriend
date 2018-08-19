@@ -1,5 +1,6 @@
 package com.sendfriend.controllers;
 
+import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
@@ -16,7 +17,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
 @RequestMapping(value = "")
@@ -33,6 +36,9 @@ public class UserController {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users",userDao.findAll());
+
+//      #TODO: 1) Get a random route; .size() is not working on the routeDao.findAll() return for some reason.
+
 
         if(!username.equals("none")) {
             List<User> user = userDao.findByUsername(username);
@@ -53,17 +59,22 @@ public class UserController {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model, String verify) {
+    public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model, String verify, HttpServletResponse response) {
 
         List<User> foundName = userDao.findByUsername(user.getUsername());
 
-        if (errors.hasErrors()) {
+        if (errors.hasErrors() || (foundName.equals(user.getUsername()))) {
             model.addAttribute("title", "Sendfriend | Register New User");
+            model.addAttribute("user", user);
 
-            return "user/register";
+            return "redirect:/register";
         }
         userDao.save(user);
-        return "redirect:index/";
+        Cookie c = new Cookie("user", user.getUsername());
+        c.setPath("/");
+        response.addCookie(c);
+
+        return "user/index";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
@@ -83,7 +94,7 @@ public class UserController {
 
         User loggedIn = userExists.get(0);
         if (loggedIn.getPassword().equals(password)) {
-            Cookie c = new Cookie("user",loggedIn.getUsername());
+            Cookie c = new Cookie("user", loggedIn.getUsername());
             c.setPath("/");
             response.addCookie(c);
 
