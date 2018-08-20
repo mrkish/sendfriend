@@ -26,7 +26,7 @@ public class User {
 
     @OneToMany
     @JoinTable(name = "user_id")
-    private List<Route> routes = new ArrayList<>();
+    private List<Beta> betas = new ArrayList<>();
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -66,5 +66,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Beta> getBetas() {
+        return betas;
+    }
+
+    public void setBetas(List<Beta> betas) {
+        this.betas = betas;
     }
 }
