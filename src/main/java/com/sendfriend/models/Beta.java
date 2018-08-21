@@ -28,6 +28,13 @@ public class Beta {
     @ManyToOne
     private Route route;
 
+    public Beta() {}
+
+    public Beta(String description) {
+        this.shared = shared;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }

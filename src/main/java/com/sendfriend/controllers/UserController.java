@@ -4,6 +4,7 @@ import com.sendfriend.models.Beta;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
 import com.sendfriend.models.data.BetaDao;
+import com.sendfriend.models.data.CragDao;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class UserController {
 
     @Autowired
     RouteDao routeDao;
+
+    @Autowired
+    CragDao cragDao;
 
     @Autowired
     BetaDao betaDao;
@@ -144,12 +148,36 @@ public class UserController {
     }
 
     @RequestMapping(value = "beta")
-    public String displayAddBetaForm(Model model, @ModelAttribute User user) {
+    public String displayAddBetaForm(Model model) {
 
         model.addAttribute("title", "Add Beta");
         model.addAttribute(new Beta());
 
         return "beta/add";
+    }
+
+
+    @RequestMapping(value = "beta")
+    public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag) {
+
+        if (routeDao.findByName(route) != null && cragDao.findByName(crag) != null) {
+
+
+        }
+
+        if (routeDao.findByName(route) != null && cragDao.findByName(crag) == null) {
+
+        }
+
+        if (routeDao.findByName(route) == null && cragDao.findByName(crag) != null) {
+
+        }
+
+        if (routeDao.findByName(route) == null && cragDao.findByName(crag) == null) {
+
+        }
+
+        return "redirect:/beta/view/" +  newBeta.getId();
     }
 
 }
