@@ -147,7 +147,7 @@ public class UserController {
         return "user/login";
     }
 
-    @RequestMapping(value = "beta")
+    @RequestMapping(value = "beta", method = RequestMethod.GET)
     public String displayAddBetaForm(Model model) {
 
         model.addAttribute("title", "Add Beta");
@@ -157,7 +157,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "beta")
+    @RequestMapping(value = "beta", method = RequestMethod.POST)
     public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag) {
 
         if (routeDao.findByName(route) != null && cragDao.findByName(crag) != null) {

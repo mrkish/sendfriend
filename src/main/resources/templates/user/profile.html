@@ -2,7 +2,6 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
 <body class="container">
-<h1 th:text="${title}">Default Title</h1>
 
 <div th:object="${user}">
     <div th:field="*{username}" th:value="*{username}">Username</div>

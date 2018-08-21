@@ -11,10 +11,10 @@
         <th>Description</th>
         <th>Category</th>
     </tr>
-    <tr th:each="route : ${routes}">
-        <td th:text="*{route.name}"></td>
-        <td th:text="*{route.description}"></td>
-        <td><a th:href="'/route/edit/' + ${route.id}">Edit</a></td>
+    <tr th:each="area : ${areas}">
+        <td th:text="*{area.name}"></td>
+        <td th:text="*{area.description}"></td>
+        <td><a th:href="'/area/edit/' + ${area.id}">Edit</a></td>
     </tr>
 </table>
 
