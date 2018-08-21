@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface betaDao extends CrudRepository<Beta, Integer> {
+public interface BetaDao extends CrudRepository<Beta, Integer> {
 }

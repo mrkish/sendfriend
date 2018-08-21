@@ -1,7 +1,9 @@
 package com.sendfriend.controllers;
 
+import com.sendfriend.models.Beta;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
+import com.sendfriend.models.data.BetaDao;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,19 +33,36 @@ public class UserController {
     @Autowired
     RouteDao routeDao;
 
+    @Autowired
+    BetaDao betaDao;
+
+    public boolean checkLogin(HttpServletRequest request) {
+
+        boolean loggedIn = false;
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (c.getName().contains("user") && c.getValue() != null) {
+                    loggedIn = true;
+                }
+            }
+        }
+        return loggedIn;
+    }
+
     @RequestMapping(value = "")
-    public String index(Model model, @CookieValue(value = "user", defaultValue = "none") String username)  {
+    public String index(Model model, @CookieValue(value = "user", defaultValue = "none") String username) {
 
         model.addAttribute("title", "Sendfriend! | Index");
-        model.addAttribute("users",userDao.findAll());
+        model.addAttribute("users", userDao.findAll());
 
 //      #TODO: 1) Get a random route; .size() is not working on the routeDao.findAll() return for some reason.
 
-
-        if(!username.equals("none")) {
+        if (!username.equals("none")) {
             List<User> user = userDao.findByUsername(username);
             User loggedIn = user.get(0);
-            model.addAttribute("user",loggedIn);
+            model.addAttribute("user", loggedIn);
         }
 
         return "user/index";
@@ -59,7 +78,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
-    public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model, String verify, HttpServletResponse response) {
+    public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model,
+                                      String verify, HttpServletResponse response) {
 
         List<User> foundName = userDao.findByUsername(user.getUsername());
 
@@ -88,7 +108,8 @@ public class UserController {
 
         List<User> userExists = userDao.findByUsername(username);
 
-        if (userExists.isEmpty()) { model.addAttribute("title", "Sendfriend | Login!");
+        if (userExists.isEmpty()) {
+            model.addAttribute("title", "Sendfriend | Login!");
             model.addAttribute("errors", "Login failed");
         }
 
@@ -121,4 +142,14 @@ public class UserController {
         }
         return "user/login";
     }
- }
+
+    @RequestMapping(value = "beta")
+    public String displayAddBetaForm(Model model, @ModelAttribute User user) {
+
+        model.addAttribute("title", "Add Beta");
+        model.addAttribute(new Beta());
+
+        return "beta/add";
+    }
+
+}
