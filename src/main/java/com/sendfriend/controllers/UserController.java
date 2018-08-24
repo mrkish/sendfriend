@@ -1,6 +1,7 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.Beta;
+import com.sendfriend.models.Crag;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
 import com.sendfriend.models.data.BetaDao;
@@ -160,24 +161,42 @@ public class UserController {
     @RequestMapping(value = "beta", method = RequestMethod.POST)
     public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag) {
 
-        if (routeDao.findByName(route) != null && cragDao.findByName(crag) != null) {
+	List<Route> newBetaRoutes = routeDao.findByName(route);
+	List<Crag> cragCandidates = cragDao.findByName(crag);
+
+	Route routeCandidate = newBetaRoutes.get(0);
+	Crag cragCandidate = cragCandidates.get(0);
+        if (newBetaRoutes.size() == 1) {
+            Beta betaToSave = addBetaProcess(newBeta, routeCandidate, cragCandidate);
+        }
+
+
+        return "redirect:/beta/view/";
+    }
+
+    private Beta addBetaProcess(Beta newBeta, Route route, Crag crag) {
+
+ 
+        if (routeDao.findByName(route.getName()) != null && cragDao.findByName(crag.getName()) != null) {
 
 
         }
 
-        if (routeDao.findByName(route) != null && cragDao.findByName(crag) == null) {
+        if (routeDao.findByName(route.getName()) != null && cragDao.findByName(crag.getName()) == null) {
 
         }
 
-        if (routeDao.findByName(route) == null && cragDao.findByName(crag) != null) {
+        if (routeDao.findByName(route.getName()) == null && cragDao.findByName(crag.getName()) != null) {
 
         }
 
-        if (routeDao.findByName(route) == null && cragDao.findByName(crag) == null) {
+        if (routeDao.findByName(route.getName()) == null && cragDao.findByName(crag.getName()) == null) {
 
-        }
+        }       
 
-        return "redirect:/beta/view/" +  newBeta.getId();
+
+        return newBeta;
+    
     }
 
 }
