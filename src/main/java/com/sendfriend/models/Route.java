@@ -23,7 +23,7 @@ public class Route {
     private double rating;
 
     @ManyToOne
-    private User user;
+    private Crag crag;
 
     public Route() {};
 
@@ -75,5 +75,13 @@ public class Route {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Crag getCrag() {
+        return crag;
+    }
+
+    public void setCrag(Crag crag) {
+        this.crag = crag;
     }
 }

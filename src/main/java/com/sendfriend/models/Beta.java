@@ -35,6 +35,23 @@ public class Beta {
         this.description = description;
     }
 
+    public Beta(Route route, User user) {
+        this.route = route;
+        this.user = user;
+    }
+
+    public Beta(String description, boolean shared) {
+        this.shared = shared;
+        this.description = description;
+    }
+
+    public Beta(String description, Route route, User user, boolean shared) {
+        this.description = description;
+        this.route = route;
+        this.user = user;
+        this.shared = shared;
+    }
+
     public int getId() {
         return id;
     }

@@ -157,26 +157,28 @@ public class UserController {
         return "beta/add";
     }
 
-
     @RequestMapping(value = "beta", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag) {
+    public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag, boolean shared, @ModelAttribute User user) {
 
-	List<Route> newBetaRoutes = routeDao.findByName(route);
-	List<Crag> cragCandidates = cragDao.findByName(crag);
+        List<Route> routeCandidates = routeDao.findByName(route);
+        List<Crag> cragCandidates = cragDao.findByName(crag);
 
-	Route routeCandidate = newBetaRoutes.get(0);
-	Crag cragCandidate = cragCandidates.get(0);
-        if (newBetaRoutes.size() == 1) {
-            Beta betaToSave = addBetaProcess(newBeta, routeCandidate, cragCandidate);
+        if ((routeCandidates.size() == 1) && (cragCandidates.size() == 1) &&
+                (routeCandidates.get(0).getCrag().equals(crag))) {
+            newBeta.setRoute(routeCandidates.get(0));
+            newBeta.setUser(user);
+            Route routeCandidate = routeCandidates.get(0);
+            newBeta.setRoute(routeDao.findById(routeCandidate.getId()));
+
+            betaDao.save(newBeta);
+            return "redirect:/beta/view/" + newBeta.getId();
         }
-
 
         return "redirect:/beta/view/";
     }
 
     private Beta addBetaProcess(Beta newBeta, Route route, Crag crag) {
 
- 
         if (routeDao.findByName(route.getName()) != null && cragDao.findByName(crag.getName()) != null) {
 
 
@@ -196,7 +198,6 @@ public class UserController {
 
 
         return newBeta;
-    
     }
 
 }
