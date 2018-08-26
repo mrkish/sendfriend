@@ -5,13 +5,13 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<table class="table">
+<table th:if="${areas} and ${areas.size()}" class="table">
     <tr>
         <th>Name</th>
         <th>Description</th>
         <th>Category</th>
     </tr>
-    <tr th:each="area : ${areas}">
+    <tr th:th:each="area : ${areas}">
         <td th:text="*{area.name}"></td>
         <td th:text="*{area.description}"></td>
         <td><a th:href="'/area/edit/' + ${area.id}">Edit</a></td>
