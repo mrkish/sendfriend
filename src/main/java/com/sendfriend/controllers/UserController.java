@@ -64,8 +64,9 @@ public class UserController {
 
 //      #TODO: 1) Get a random route; .size() is not working on the routeDao.findAll() return for some reason.
 
-        if (!username.equals("none")) {
-            List<User> user = userDao.findByUsername(username);
+        List<User> user = userDao.findByUsername(username);
+
+        if (!username.equals("none") && (user.size() >= 1)) {
             User loggedIn = user.get(0);
             model.addAttribute("user", loggedIn);
         }
