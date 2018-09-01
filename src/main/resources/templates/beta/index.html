@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<table th:if="${betas} and ${betas.size()}" class="table">
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Category</th>
+    </tr>
+    <tr th:th:each="beta : ${betas}">
+        <td th:text="*{beta.name}"></td>
+        <td th:text="*{beta.description}"></td>
+        <td><a th:href="'/beta/edit/' + ${beta.id}">Edit</a></td>
+    </tr>
+</table>
+
+</body>
+</html>
