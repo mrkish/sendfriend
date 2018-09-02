@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 @Transactional
 public interface BetaDao extends CrudRepository<Beta, Integer> {
+    Beta findById(int id);
 }

@@ -12,8 +12,7 @@
     </div>
     <div class="form-group">
         <label th:for="description">Description</label>
-        <input class="form-control" th:field="*{description}" />
-        <span th:errors="*{description}" class="error"></span>
+        <textarea class="form-control" th:field="*{description}" rows="3"></textarea>
     </div>
     <div class="form-group">
         <label th:for="shared">Shared</label>
@@ -22,6 +21,7 @@
             <option th:value="False" th:field="*{shared}">False</option>
         </select>
     </div>
+    <input type="hidden" th:value="${user}" />
     <input type="submit" value="Add Beta" />
 </form>
 

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 @Transactional
 public interface UserDao extends CrudRepository<User, Integer> {
-    List<User> findByUsername(String username);
+    User findByUsername(String username);
 }

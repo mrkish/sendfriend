@@ -4,6 +4,32 @@
 <body class="container">
 
 <nav th:replace="fragments :: navigation"></nav>
+<a href="/beta/add">Add Beta</a>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th scope="col">Route Name</th>
+        <th scope="col">Description</th>
+        <th scope="col"></th>
+        <th scope="col">Column heading</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="table-active">
+        <th scope="row">Active</th>
+        <td>Column content</td>
+        <td>Column content</td>
+        <td>Column content</td>
+    </tr>
+    <tr>
+        <th scope="row">Default</th>
+        <td>Column content</td>
+        <td>Column content</td>
+        <td>Column content</td>
+    </tr>
+
+
 
 <table th:if="${betas} and ${betas.size()}" class="table">
     <tr>

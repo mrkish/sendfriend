@@ -12,14 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
@@ -30,45 +25,27 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UserController {
 
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Autowired
-    RouteDao routeDao;
+    private RouteDao routeDao;
 
     @Autowired
-    CragDao cragDao;
+    private CragDao cragDao;
 
     @Autowired
-    BetaDao betaDao;
-
-    public boolean checkLogin(HttpServletRequest request) {
-
-        boolean loggedIn = false;
-
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().contains("user") && c.getValue() != null) {
-                    loggedIn = true;
-                }
-            }
-        }
-        return loggedIn;
-    }
+    private BetaDao betaDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, @CookieValue(value = "user", defaultValue = "none") String username) {
+    public String index(Model model, HttpSession session) {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users", userDao.findAll());
 
 //      #TODO: 1) Get a random route; .size() is not working on the routeDao.findAll() return for some reason.
 
-        List<User> user = userDao.findByUsername(username);
-
-        if (!username.equals("none") && (user.size() >= 1)) {
-            User loggedIn = user.get(0);
-            model.addAttribute("user", loggedIn);
+        if (session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
         }
 
         return "user/index";
@@ -85,9 +62,9 @@ public class UserController {
 
     @RequestMapping(value = "register", method = RequestMethod.POST)
     public String processRegisterForm(@ModelAttribute @Valid User user, Errors errors, Model model,
-                                      String verify, HttpServletResponse response) {
+                                      String verify, HttpSession session) {
 
-        List<User> foundName = userDao.findByUsername(user.getUsername());
+        User foundName = userDao.findByUsername(user.getUsername());
 
         if (errors.hasErrors() || (foundName.equals(user.getUsername()))) {
             model.addAttribute("title", "Sendfriend | Register New User");
@@ -95,12 +72,11 @@ public class UserController {
 
             return "redirect:/register";
         }
-        userDao.save(user);
-        Cookie c = new Cookie("user", user.getUsername());
-        c.setPath("/");
-        response.addCookie(c);
 
-        return "user/index";
+        userDao.save(user);
+        session.setAttribute("user", user);
+
+        return "redirect:/index";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
@@ -110,56 +86,63 @@ public class UserController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String processLogin(Model model, String username, String password, HttpServletResponse response) {
+    public String processLogin(Model model, @RequestParam String username, @RequestParam String password, HttpSession session) {
 
-        List<User> userExists = userDao.findByUsername(username);
+        User userExists = userDao.findByUsername(username);
 
-        if (userExists.isEmpty()) {
-            model.addAttribute("title", "Sendfriend | Login!");
+        if (username.isEmpty() || password.isEmpty()) {
             model.addAttribute("errors", "Login failed");
+            return "redirect:user/login";
         }
 
-        User loggedIn = userExists.get(0);
-        if (loggedIn.getPassword().equals(password)) {
-            Cookie c = new Cookie("user", loggedIn.getUsername());
-            c.setPath("/");
-            response.addCookie(c);
+        String userExistsPassword = userExists.getPassword();
+        if (userExistsPassword.equals(password)) {
+            session.setAttribute("user", userExists);
 
-            return "redirect:/";
+            return "user/index";
         }
-
-        model.addAttribute("title", "Login!");
-        model.addAttribute("error", "Login failed!");
 
         return "redirect:/login";
     }
 
     @RequestMapping(value = "logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
+    public String logout(HttpSession session) {
 
-        Cookie[] cookies = request.getCookies();
+        session.invalidate();
 
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                c.setMaxAge(0);
-                c.setPath("/");
-                response.addCookie(c);
-            }
-        }
-        return "user/login";
+        return "redirect:/login";
     }
 
     @RequestMapping(value = "beta", method = RequestMethod.GET)
-    public String displayAddBetaForm(Model model) {
+    public String displayAllBeta(Model model, HttpSession session) {
+
+        model.addAttribute("title", "Betas");
+        model.addAttribute("betas", betaDao.findAll());
+        if (session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
+        }
+
+        return "beta/index";
+    }
+
+    @RequestMapping(value = "beta/add", method = RequestMethod.GET)
+    public String displayAddBetaForm(Model model, HttpSession session) {
 
         model.addAttribute("title", "Add Beta");
         model.addAttribute(new Beta());
 
+        if (session.getAttribute("user") == null) {
+            model.addAttribute("errors", "You can only add beta if you're a registered user.");
+        } else if (session.getAttribute("user") != null) {
+            User user = userDao.findByUsername((String) session.getAttribute("user"));
+            model.addAttribute("user", user);
+        }
+
         return "beta/add";
     }
 
-    @RequestMapping(value = "beta", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, Errors errors, @Valid Beta newBeta, String route, String crag, boolean shared, @ModelAttribute User user) {
+    @RequestMapping(value = "beta/add", method = RequestMethod.POST)
+    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors, String route, String crag, User user, boolean shared) {
 
         List<Route> routeCandidates = routeDao.findByName(route);
         List<Crag> cragCandidates = cragDao.findByName(crag);
@@ -172,10 +155,11 @@ public class UserController {
             newBeta.setRoute(routeDao.findById(routeCandidate.getId()));
 
             betaDao.save(newBeta);
+
             return "redirect:/beta/view/" + newBeta.getId();
         }
 
-        return "redirect:/beta/view/";
+        return "redirect:/route/view/";
     }
 
     private Beta addBetaProcess(Beta newBeta, Route route, Crag crag) {

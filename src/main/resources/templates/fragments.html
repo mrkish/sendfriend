@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:fragment="head">
     <meta charset="UTF-8"/>
-    <title th:text="${title}"></title>
+    <title th:value="${title}" th:text="${title}"></title>
 
     <!-- Bootstrap stylesheets and script -->
     <link th:href="@{/css/bootstrap.css}" rel="stylesheet" />
@@ -17,7 +17,6 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
@@ -36,10 +35,11 @@
                     <a th:unless="${user}" class="nav-link" href="/login">Login</a>
                     <a th:if="${user}" class="nav-link" href="/logout">Log Out</a>
                 </li>
-                <li th:unless="${user}" class="nav-item">
+                <li th:unless="${session.user}" class="nav-item">
                     <a class="nav-link" href="/register">Register</a>
                 </li>
             </ul>
+            <span th:if="${user}" th:value="${user}" th:text="${user.username}">User</span>
             <form class="form-inline my-2 my-lg-0">
                 <input class="form-control mr-sm-2" placeholder="Search" type="text">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
