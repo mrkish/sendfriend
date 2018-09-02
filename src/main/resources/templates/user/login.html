@@ -4,16 +4,26 @@
 <body class="container">
 
 <nav th:replace="fragments :: navigation"></nav>
-<form method="post" style="max-width:600px;">
-    <div class="form-group">
-        <label value="username">Username</label>
-        <input class="form-control" name="username" />
+
+<div class="card text-white bg-primary offset-mb-3 mx-auto field-label-responsive" style="max-width: 20rem;">
+    <div class="card-header">Login</div>
+    <div class="card-body">
+        <p class="card-text">
+            <form method="post" style="max-width:600px;">
+                <div class="form-group">
+                    <label value="username">Username</label>
+                    <input class="form-control" name="username" />
+                </div>
+                <div class="form-group">
+                    <label value="password">Password</label>
+                    <input type="password" class="form-control" name="password" />
+                </div>
+            <input type="submit" value="Login" />
+        </form>
+        </p>
     </div>
-    <div class="form-group">
-        <label value="password">Password</label>
-        <input type="password" class="form-control" name="password" />
-    </div>
-    <input type="submit" value="Login" />
-</form>
+</div>
+
+
 </body>
 </html>

@@ -26,6 +26,17 @@ public class Crag {
     @ManyToOne
     private Area area;
 
+    public Crag() {}
+
+    public Crag(@NotNull String name) {
+        this.name = name;
+    }
+
+    public Crag(@NotNull String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public int getId() {
         return id;
     }

@@ -25,6 +25,8 @@ public class Beta {
     @ManyToOne
     private User user;
 
+//    private int userId;
+
     @ManyToOne
     private Route route;
 
@@ -76,13 +78,13 @@ public class Beta {
         this.shared = shared;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+//    public int getUserId() {
+//        return userId;
+//    }
+//
+//    public void setUserId(int userId) {
+//        this.userId = userId;
+//    }
 
     public Route getRoute() {
         return route;
@@ -90,5 +92,13 @@ public class Beta {
 
     public void setRoute(Route route) {
         this.route = route;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

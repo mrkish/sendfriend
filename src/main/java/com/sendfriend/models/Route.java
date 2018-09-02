@@ -4,6 +4,8 @@ import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Route {
@@ -21,6 +23,10 @@ public class Route {
     private String description;
 
     private double rating;
+
+    @OneToMany
+    @JoinTable(name = "route_id")
+    private List<Beta> betas = new ArrayList<>();
 
     @ManyToOne
     private Crag crag;
@@ -84,4 +90,13 @@ public class Route {
     public void setCrag(Crag crag) {
         this.crag = crag;
     }
+
+    public List<Beta> getBetas() {
+        return betas;
+    }
+
+    public void setBetas(List<Beta> betas) {
+        this.betas = betas;
+    }
+
 }

@@ -5,9 +5,14 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<h1 th:if="${user} and ${user.username}" th:text="${user.username}">Hello, Username!</h1>
-<div>
-
+<div class="jumbotron">
+    <h1 class="display-3">Welcome to Sendfriend!</h1>
+    <p class="lead">This is a website designed for the (somewhat) obsessive climber -- i.e., those who want to or already do keep extensive notes on their performance and beta for routes they've tried.</p>
+    <hr class="my-4">
+    <p>Our platform is designed around allowing users to create beta entries for routes. From that low-level data we're able to also keep track of climber's performance over time, across different crags and areas, and in comparison with other climbers. Our platform enables users to share -- or not -- their notes about specific climbs with their friends. Through this aggregate data we can also provide some interesting metrics about routes themselves, how often they're attempted, flashed, and so on.</p>
+    <p class="lead">
+        <a class="btn btn-primary btn-lg" href="/register" role="button">Click here to Sign up!</a>
+    </p>
 </div>
 
 <div class="card mb-3" th:if="${featured}" th:object="${featured}">

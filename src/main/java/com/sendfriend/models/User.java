@@ -24,7 +24,7 @@ public class User {
     @NotNull
     private String email;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_id")
     private List<Beta> betas = new ArrayList<>();
 

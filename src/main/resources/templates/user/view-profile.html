@@ -2,11 +2,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
 <body class="container">
-<nav th:replace="fragments :: navigation"></nav>
 
-<a href="/beta/add">Add Beta</a>
-<div th:object="${user}">
-    <h2 th:field="*{username}" th:value="*{username}"></h2>
+<div th:object="${userProfile}">
+    <h2 th:field="*{username}" th:value="*{username}">Username</h2>
     <div>
         <ul>
             <li th:each="beta : *{betas}" th:text="{beta.name}">Name</li>

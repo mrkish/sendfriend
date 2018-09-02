@@ -11,4 +11,5 @@ import java.util.List;
 @Transactional
 public interface CragDao extends CrudRepository<Crag, Integer> {
     List<Crag> findByName(String name);
+    Crag findById(int id);
 }

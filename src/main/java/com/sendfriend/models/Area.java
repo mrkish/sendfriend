@@ -17,22 +17,31 @@ public class Area {
     @NotNull
     private String name;
 
-    @NotNull
     private String description;
 
-    @NotNull
     private String location;
 
     @OneToMany
     @JoinColumn(name = "area_id")
     private List<Crag> crags = new ArrayList<>();
 
-    public int getId() {
-        return id;
+    public Area() {}
+
+    public Area(String name) {
+        this.name = name;
+    }
+
+    public Area(@NotNull String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getName() {

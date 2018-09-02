@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.*;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -66,17 +67,26 @@ public class UserController {
 
         User foundName = userDao.findByUsername(user.getUsername());
 
-        if (errors.hasErrors() || (foundName.equals(user.getUsername()))) {
-            model.addAttribute("title", "Sendfriend | Register New User");
-            model.addAttribute("user", user);
+        if (foundName != null) {
+            if (errors.hasErrors() || (foundName.equals(user.getUsername()))) {
+                model.addAttribute("title", "Sendfriend | Register New User");
+                model.addAttribute("user", user);
 
-            return "redirect:/register";
+                return "redirect:/register";
+            }
+        } else {
+           if (errors.hasErrors()) {
+               model.addAttribute("title", "Sendfriend | Register New User");
+               model.addAttribute("user", user);
+
+               return "redirect:/register";
+           }
         }
 
         userDao.save(user);
         session.setAttribute("user", user);
 
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)
@@ -98,6 +108,7 @@ public class UserController {
         String userExistsPassword = userExists.getPassword();
         if (userExistsPassword.equals(password)) {
             session.setAttribute("user", userExists);
+            model.addAttribute("user", userExists);
 
             return "user/index";
         }
@@ -107,7 +118,6 @@ public class UserController {
 
     @RequestMapping(value = "logout")
     public String logout(HttpSession session) {
-
         session.invalidate();
 
         return "redirect:/login";
@@ -134,7 +144,8 @@ public class UserController {
         if (session.getAttribute("user") == null) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
         } else if (session.getAttribute("user") != null) {
-            User user = userDao.findByUsername((String) session.getAttribute("user"));
+            User username = (User) session.getAttribute("user");
+            User user = userDao.findByUsername(username.getUsername());
             model.addAttribute("user", user);
         }
 
@@ -146,6 +157,8 @@ public class UserController {
 
         List<Route> routeCandidates = routeDao.findByName(route);
         List<Crag> cragCandidates = cragDao.findByName(crag);
+
+
 
         if ((routeCandidates.size() == 1) && (cragCandidates.size() == 1) &&
                 (routeCandidates.get(0).getCrag().equals(crag))) {
@@ -185,4 +198,44 @@ public class UserController {
         return newBeta;
     }
 
+    @RequestMapping(value = "profile")
+    public String displayCurrentUserProfile(Model model, HttpSession session) {
+
+        if (session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
+        } else if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        User username = (User) session.getAttribute("user");
+        User user = userDao.findByUsername(username.getUsername());
+        model.addAttribute("title", user.getUsername() + " | Profile");
+        model.addAttribute("betas", betaDao.findByUserId(user.getId()));
+
+        return "user/profile";
+    }
+
+   @RequestMapping(value = "profile/{userId}")
+    public String viewOtherUserProfile(Model model, HttpSession session, @RequestParam int userId) {
+
+       if (session.getAttribute("user") != null) {
+           model.addAttribute("user", session.getAttribute("user"));
+       }
+
+       List<Beta> allUserBetas = betaDao.findByUserId(userId);
+       List<Beta> userPublicBetas = new ArrayList<>();
+       for(Beta beta : allUserBetas) {
+           if (beta.isShared() == true) {
+               userPublicBetas.add(beta);
+           }
+       }
+
+       User userToView = userDao.findById(userId);
+       String userProfile = userToView.getUsername();
+       model.addAttribute("betas", userPublicBetas);
+       model.addAttribute("userProfile", userProfile);
+       model.addAttribute("title", userProfile + " | Profile");
+
+        return "/user/view-profile";
+   }
 }
