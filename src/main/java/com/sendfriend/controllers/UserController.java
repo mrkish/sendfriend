@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -120,7 +119,7 @@ public class UserController {
             return "user/index";
         }
 
-        return "redirect:/login";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "logout")
@@ -146,7 +145,7 @@ public class UserController {
     public String displaySelectAreaForm(Model model, HttpSession session) {
 
         List<Area> areasOptions = (List<Area>) areaDao.findAll();
-        areasOptions.add(new Area());
+        areasOptions.add(new Area("none"));
 
         model.addAttribute("areas", areasOptions);
         model.addAttribute("title", "Select Area");
@@ -157,15 +156,8 @@ public class UserController {
         return "beta/select-area";
     }
 
-    @RequestMapping(value = "beta/add", method = RequestMethod.GET)
-    public String displayAddBetaForm(Model model, HttpSession session, @RequestParam String newArea, @RequestParam Area area) {
-
-        if (newArea.isEmpty() && area != null) {
-            List<Crag> crags = area.getCrags();
-            model.addAttribute("crags", crags);
-        }
-        model.addAttribute("title", "Add Beta");
-        model.addAttribute(new Beta());
+    @RequestMapping(value = "beta/add")
+    public String displayAddBetaForm(Model model, HttpSession session, @RequestParam(required = false) String newAreaName, @RequestParam int areaId) {
 
         if (session.getAttribute("user") == null) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
@@ -175,11 +167,35 @@ public class UserController {
             model.addAttribute("user", user);
         }
 
+        Area area = areaDao.findById(areaId);
+        if (!newAreaName.isEmpty() && area != null) {
+           model.addAttribute("title", "Select Area");
+           model.addAttribute("errors", "Please only select an area or enter a name for a new area.");
+
+           return "redirect:/beta/select-area";
+        }
+
+        if (newAreaName.isEmpty() && area != null) {
+            List<Crag> crags = area.getCrags();
+            model.addAttribute("crags", crags);
+            model.addAttribute("area", area.getName());
+        } else if (!newAreaName.isEmpty()) {
+            Area newArea = new Area(newAreaName);
+            areaDao.save(newArea);
+            model.addAttribute("area", newArea.getName());
+        }
+
+        model.addAttribute("title", "Add Beta");
+        model.addAttribute(new Beta());
+
         return "beta/add";
     }
 
-    @RequestMapping(value = "beta/add", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors, String routeName, String cragName, User user, boolean shared) {
+    @RequestMapping(value = "beta/process-add", method = RequestMethod.POST)
+    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors,
+                                     @RequestParam(required = false) Integer cragId, @RequestParam String routeName,
+                                     @RequestParam(required = false) String cragName, @RequestParam int userId,
+                                     boolean isShared) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Beta");

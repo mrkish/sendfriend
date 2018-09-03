@@ -1,8 +1,5 @@
 package com.sendfriend.models;
 
-import com.sendfriend.models.Route;
-import com.sendfriend.models.User;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -20,12 +17,10 @@ public class Beta {
     private String description;
 
     @NotNull
-    private boolean shared;
+    private boolean isShared;
 
     @ManyToOne
     private User user;
-
-//    private int userId;
 
     @ManyToOne
     private Route route;
@@ -33,7 +28,7 @@ public class Beta {
     public Beta() {}
 
     public Beta(String description) {
-        this.shared = shared;
+        this.isShared = false;
         this.description = description;
     }
 
@@ -42,16 +37,16 @@ public class Beta {
         this.user = user;
     }
 
-    public Beta(String description, boolean shared) {
-        this.shared = shared;
+    public Beta(String description, boolean isShared) {
+        this.isShared = isShared;
         this.description = description;
     }
 
-    public Beta(String description, Route route, User user, boolean shared) {
+    public Beta(String description, Route route, User user, boolean isShared) {
         this.description = description;
         this.route = route;
         this.user = user;
-        this.shared = shared;
+        this.isShared = isShared;
     }
 
     public int getId() {
@@ -71,20 +66,12 @@ public class Beta {
     }
 
     public boolean isShared() {
-        return shared;
+        return isShared;
     }
 
-    public void setShared(boolean shared) {
-        this.shared = shared;
+    public void setIsShared(boolean isShared) {
+        this.isShared = isShared;
     }
-
-//    public int getUserId() {
-//        return userId;
-//    }
-//
-//    public void setUserId(int userId) {
-//        this.userId = userId;
-//    }
 
     public Route getRoute() {
         return route;
