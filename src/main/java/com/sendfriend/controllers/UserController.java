@@ -47,6 +47,9 @@ public class UserController {
             int random = ThreadLocalRandom.current().nextInt(max);
             featured = routes.get(random);
         } while (featured == null);
+        if (featured.getCrag() != null && featured.getCrag().getArea() != null) {
+            model.addAttribute("featuredArea", featured.getCrag().getArea());
+        }
         model.addAttribute("featured", featured);
 
         if (session.getAttribute("user") != null) {
