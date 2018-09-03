@@ -144,6 +144,16 @@ public class UserController {
     @RequestMapping(value = "beta/select-area")
     public String displaySelectAreaForm(Model model, HttpSession session) {
 
+        if (session.getAttribute("user") == null) {
+            model.addAttribute("errors", "You can only add beta if you're a registered user.");
+
+            return "redirect:/beta";
+        } else if (session.getAttribute("user") != null) {
+            User username = (User) session.getAttribute("user");
+            User user = userDao.findByUsername(username.getUsername());
+            model.addAttribute("user", user);
+        }
+
         List<Area> areasOptions = (List<Area>) areaDao.findAll();
         areasOptions.add(new Area("none"));
 
@@ -161,6 +171,7 @@ public class UserController {
 
         if (session.getAttribute("user") == null) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
+            return "beta/index";
         } else if (session.getAttribute("user") != null) {
             User username = (User) session.getAttribute("user");
             User user = userDao.findByUsername(username.getUsername());
@@ -263,7 +274,7 @@ public class UserController {
                             model.addAttribute("user", session.getAttribute("user"));
                         }
 
-                        return "redirect/beta/view/" + newBeta.getId();
+                        return "redirect:/beta/view/" + newBeta.getId();
                     }
                 }
             }
@@ -285,14 +296,14 @@ public class UserController {
             model.addAttribute("user", session.getAttribute("user"));
         }
 
-        return "redirect/beta/view/" + newBeta.getId();
+        return "redirect:/beta/view/" + newBeta.getId();
     }
 
     @RequestMapping(value ="beta/view/{betaId}")
-    public String viewSingleBeta(Model model, HttpSession session, @PathVariable int betaId, @ModelAttribute int routeId) {
+    public String viewSingleBeta(Model model, HttpSession session, @PathVariable int betaId) {
 
-        Route route = routeDao.findById(routeId);
         Beta beta = betaDao.findById(betaId);
+        Route route = routeDao.findById(beta.getRoute().getId());
 
         if (route == null || beta == null) {
             model.addAttribute("errors", "Route or Beta not found!");
@@ -306,7 +317,7 @@ public class UserController {
             model.addAttribute("user", session.getAttribute("user"));
         }
 
-        return "beta/view/";
+        return "beta/view";
     }
 
     @RequestMapping(value = "profile")

@@ -28,13 +28,13 @@ public class User {
     @JoinTable(name = "user_id")
     private List<Beta> betas = new ArrayList<>();
 
+    public User() { }
+
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
     }
-
-    public User() { }
 
     public int getId() {
         return id;

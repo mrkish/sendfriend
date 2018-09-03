@@ -35,7 +35,7 @@ public class Route {
     @ManyToOne
     private Crag crag;
 
-    public Route() {};
+    public Route() {}
 
     public Route(String name) {
         this.name = name;

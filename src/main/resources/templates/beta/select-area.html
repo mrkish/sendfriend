@@ -16,7 +16,7 @@
             <option th:each="area : ${areas}"
                     th:text="${area.name}"
                     th:value="${area.id}"
-                    th:selected="${area.name == null}">
+                    th:selected="${area.name == 'none'}">
             </option>
         </select>
     </div>
