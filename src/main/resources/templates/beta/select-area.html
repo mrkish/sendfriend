@@ -12,7 +12,7 @@
     </div>
     <div class="form-group">
         <label th:for="area"><b>OR</b> Select Existing Area:</label>
-        <select name="areaId">
+        <select name="areaId" class="custom-select">
             <option th:each="area : ${areas}"
                     th:text="${area.name}"
                     th:value="${area.id}"
@@ -20,7 +20,7 @@
             </option>
         </select>
     </div>
-    <input type="submit" value="Select Area" />
+    <input type="submit" class="btn btn-success" value="Select Area" />
 </form>
 
 </body>

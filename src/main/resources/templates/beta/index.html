@@ -4,45 +4,33 @@
 <body class="container">
 
 <nav th:replace="fragments :: navigation"></nav>
-<a href="/beta/select-area">Add Beta</a>
 
-<table class="table table-hover">
-    <thead>
-    <tr>
-        <th scope="col">Route Name</th>
-        <th scope="col">Description</th>
-        <th scope="col"></th>
-        <th scope="col">Column heading</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="table-active">
-        <th scope="row">Active</th>
-        <td>Column content</td>
-        <td>Column content</td>
-        <td>Column content</td>
-    </tr>
-    <tr>
-        <th scope="row">Default</th>
-        <td>Column content</td>
-        <td>Column content</td>
-        <td>Column content</td>
-    </tr>
-
-
-
-<table class="table">
-    <tr>
-        <th>Route</th>
-        <th>Description</th>
-        <th>Category</th>
-    </tr>
-    <tr th:each="beta : ${betas}">
-        <td th:text="*{beta.route.name}"></td>
-        <td th:text="*{beta.description}"></td>
-        <td><a th:href="'/beta/view/' + ${beta.id}">View</a></td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col">
+        <div class="btn-group-vertical" data-toggle="buttons">
+            <button type="button" class="btn btn-primary" onclick="location.href='beta/select-area';">Add Beta</button>
+        </div>
+    </div>
+    <div class="col-10">
+        <h2>All Betas</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">Route</th>
+                <th scope="col">Description</th>
+                <th scope="col">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="beta : ${betas}">
+                <td th:text="*{beta.route}"></td>
+                <td th:text="*{beta.description}"></td>
+                <td><a th:href="'/beta/view/' + ${beta.id}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 </body>
 </html>

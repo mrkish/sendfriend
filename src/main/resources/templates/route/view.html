@@ -5,5 +5,33 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<div class="row">
+    <div class="col">
+        <div class="btn-group-vertical" data-toggle="buttons">
+            <button type="button" class="btn btn-primary" onclick="location.href='area/add';">Add Area</button>
+        </div>
+    </div>
+    <div class="col-10">
+        <h2>All Areas</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="area : ${areas}">
+                <td th:text="*{area.name}"></td>
+                <td th:text="*{area.description}"></td>
+                <td><a th:href="'/area/view/' + ${area.id}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
 </body>
 </html>

@@ -13,7 +13,7 @@
     </div>
     <div class="form-group">
         <label th:for="crag">Select Existing Crag</label>
-        <select name="cragId">
+        <select name="cragId" class="custom-select">
             <option th:each="crag: ${crags}"
                     th:text="${crag.name}"
                     th:value="${crag.id}">
@@ -36,8 +36,9 @@
     </div>
     <input type="hidden" name="userId" th:value="${user.id}" />
     <input type="hidden" name="areaId" th:value="${area.id}" />
-    <input type="submit" value="Add Beta" />
+    <input type="submit" class="btn btn-success" value="Add Beta" />
 </form>
 
+<div th:replace="fragments :: footer"></div>
 </body>
 </html>

@@ -5,19 +5,33 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
-<h2>View All Crags</h2>
-<table class="table">
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Category</th>
-    </tr>
-    <tr th:each="crag : ${crags}">
-        <td th:text="*{crag.name}"></td>
-        <td th:text="*{crag.description}"></td>
-        <td><a th:href="'/crag/edit/' + ${crag.id}">Edit</a></td>
-    </tr>
-</table>
+<div class="row">
+    <div class="col">
+        <div class="btn-group-vertical" data-toggle="buttons">
+            <button type="button" class="btn btn-primary" onclick="location.href='crag/add';">Add Crag</button>
+        </div>
+    </div>
+    <div class="col-10">
+        <h2>All Crags</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="crag : ${crags}">
+                <td th:text="*{crag.name}"></td>
+                <td th:text="*{crag.description}"></td>
+                <td><a th:href="'/crag/view/' + ${crag.id}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
+<div th:replace="fragments :: footer"></div>
 </body>
 </html>

@@ -56,7 +56,7 @@ public class AreaController {
 
        areaDao.save(area);
 
-        return "redirect:area/view/" + area.getId();
+        return "redirect:/area/view/" + area.getId();
     }
 
     @RequestMapping(value = "view/{areaId}")
