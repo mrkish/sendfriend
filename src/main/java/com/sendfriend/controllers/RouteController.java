@@ -67,7 +67,6 @@ public class RouteController {
         List<Route> routeNames = routeDao.findByName(route.getName());
 
         if (errors.hasErrors()) {
-
             model.addAttribute("route", route);
             model.addAttribute("title", "Add Route!");
 

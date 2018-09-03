@@ -72,6 +72,10 @@ public class Area {
         return crags;
     }
 
+    public void addCrag(Crag crag) {
+        this.crags.add(crag);
+    }
+
     public void setCrags(List<Crag> crags) {
         this.crags = crags;
     }

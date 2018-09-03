@@ -17,7 +17,7 @@ public class Beta {
     private String description;
 
     @NotNull
-    private boolean isShared;
+    private boolean isShared = false;
 
     @ManyToOne
     private User user;
@@ -28,7 +28,6 @@ public class Beta {
     public Beta() {}
 
     public Beta(String description) {
-        this.isShared = false;
         this.description = description;
     }
 
@@ -38,8 +37,8 @@ public class Beta {
     }
 
     public Beta(String description, boolean isShared) {
-        this.isShared = isShared;
         this.description = description;
+        this.isShared = isShared;
     }
 
     public Beta(String description, Route route, User user, boolean isShared) {
