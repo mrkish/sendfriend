@@ -40,7 +40,14 @@ public class UserController {
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users", userDao.findAll());
 
-//      #TODO: 1) Get a random route; .size() is not working on the routeDao.findAll() return for some reason.
+        Route featured;
+        do {
+            ArrayList<Route> routes = (ArrayList<Route>) routeDao.findAll();
+            int max = routes.size();
+            int random = ThreadLocalRandom.current().nextInt(max);
+            featured = routes.get(random);
+        } while (featured == null);
+        model.addAttribute("featured", featured);
 
         if (session.getAttribute("user") != null) {
             model.addAttribute("user", session.getAttribute("user"));
