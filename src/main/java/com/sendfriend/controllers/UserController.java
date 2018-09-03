@@ -1,13 +1,7 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Beta;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
-import com.sendfriend.models.User;
-import com.sendfriend.models.data.BetaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.RouteDao;
-import com.sendfriend.models.data.UserDao;
+import com.sendfriend.models.*;
+import com.sendfriend.models.data.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +27,9 @@ public class UserController {
 
     @Autowired
     private CragDao cragDao;
+
+    @Autowired
+    private AreaDao areaDao;
 
     @Autowired
     private BetaDao betaDao;
@@ -135,9 +132,28 @@ public class UserController {
         return "beta/index";
     }
 
-    @RequestMapping(value = "beta/add", method = RequestMethod.GET)
-    public String displayAddBetaForm(Model model, HttpSession session) {
+    @RequestMapping(value = "beta/select-area")
+    public String displaySelectAreaForm(Model model, HttpSession session) {
 
+        List<Area> areasOptions = (List<Area>) areaDao.findAll();
+        areasOptions.add(new Area());
+
+        model.addAttribute("areas", areasOptions);
+        model.addAttribute("title", "Select Area");
+        if (session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
+        }
+
+        return "beta/select-area";
+    }
+
+    @RequestMapping(value = "beta/add", method = RequestMethod.GET)
+    public String displayAddBetaForm(Model model, HttpSession session, @RequestParam String newArea, @RequestParam Area area) {
+
+        if (newArea.isEmpty() && area != null) {
+            List<Crag> crags = area.getCrags();
+            model.addAttribute("crags", crags);
+        }
         model.addAttribute("title", "Add Beta");
         model.addAttribute(new Beta());
 
@@ -153,49 +169,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "beta/add", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors, String route, String crag, User user, boolean shared) {
+    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors, String routeName, String cragName, User user, boolean shared) {
 
-        List<Route> routeCandidates = routeDao.findByName(route);
-        List<Crag> cragCandidates = cragDao.findByName(crag);
-
-
-
-        if ((routeCandidates.size() == 1) && (cragCandidates.size() == 1) &&
-                (routeCandidates.get(0).getCrag().equals(crag))) {
-            newBeta.setRoute(routeCandidates.get(0));
-            newBeta.setUser(user);
-            Route routeCandidate = routeCandidates.get(0);
-            newBeta.setRoute(routeDao.findById(routeCandidate.getId()));
-
-            betaDao.save(newBeta);
-
-            return "redirect:/beta/view/" + newBeta.getId();
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "Add Beta");
+            return "beta/add";
         }
+
+
 
         return "redirect:/route/view/";
-    }
-
-    private Beta addBetaProcess(Beta newBeta, Route route, Crag crag) {
-
-        if (routeDao.findByName(route.getName()) != null && cragDao.findByName(crag.getName()) != null) {
-
-
-        }
-
-        if (routeDao.findByName(route.getName()) != null && cragDao.findByName(crag.getName()) == null) {
-
-        }
-
-        if (routeDao.findByName(route.getName()) == null && cragDao.findByName(crag.getName()) != null) {
-
-        }
-
-        if (routeDao.findByName(route.getName()) == null && cragDao.findByName(crag.getName()) == null) {
-
-        }       
-
-
-        return newBeta;
     }
 
     @RequestMapping(value = "profile")

@@ -2,6 +2,8 @@ package com.sendfriend.models;
 
 import javax.annotation.Generated;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class Route {
 
     private String description;
 
+    @Min(0)
+    @Max(5)
     private double rating;
 
     @OneToMany

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<form method="post" style="max-width:600px;" th:action="@{beta/add}">
+    <div class="form-group">
+        <label>Add New Area</label>
+        <input class="form-control" name="${newArea}" />
+    </div>
+    <div class="form-group">
+        <label th:for="area">Or Select Existing Area</label>
+        <select name="areaId">
+            <option th:each="area : ${areas}"
+                    th:text="${area.name}"
+                    th:value="${area.id}"
+                    th:selected="${area.name == null}">
+            </option>
+        </select>
+    </div>
+    <input type="submit" value="Select Area" />
+</form>
+
+</body>
+</html>
