@@ -103,4 +103,12 @@ public class Route {
         this.betas = betas;
     }
 
+    public void addBeta(Beta beta) {
+        this.betas.add(beta);
+    }
+
+    public void removeBeta(Beta beta) {
+        this.betas.remove(beta);
+    }
+
 }

@@ -101,6 +101,8 @@ public class RouteController {
         Route route = routeDao.findById(routeId);
         model.addAttribute("title", "Route: " + route.getName());
         model.addAttribute("route", route);
+        List<Beta> betas = getPublicBetasList(route);
+        model.addAttribute("betas", betas);
 
         return "route/view";
     }
@@ -118,6 +120,19 @@ public class RouteController {
         }
 
         return "beta/view" + beta.getId();
+    }
+
+    private List<Beta> getPublicBetasList(Route route) {
+
+        List<Beta> allBetas = route.getBetas();
+        List<Beta> publicBetas = new ArrayList<>();
+
+        for (Beta beta : allBetas) {
+            if (beta.getIsShared()) {
+                publicBetas.add(beta);
+            }
+        }
+        return publicBetas;
     }
 
 }

@@ -139,6 +139,9 @@ public class BetaController {
             newBeta.setUser(user);
             betaDao.save(newBeta);
 
+            newRoute.addBeta(newBeta);
+            routeDao.save(newRoute);
+
             model.addAttribute("beta", newBeta);
             model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
             model.addAttribute("routeId", newRoute.getId());
@@ -157,9 +160,9 @@ public class BetaController {
         cragIdInt = cragId.intValue();
         Crag crag = cragDao.findById(cragIdInt);
 
-        ArrayList<Route> foundRoutes = (ArrayList<Route>) routeDao.findByName(routeName);
-        ArrayList<Route> cragRoutes = (ArrayList<Route>) crag.getRoutes();
-        ArrayList<String> cragRouteNames = new ArrayList<>();
+        List<Route> foundRoutes = routeDao.findByName(routeName);
+        List<Route> cragRoutes = crag.getRoutes();
+        List<String> cragRouteNames = new ArrayList<>();
         for (Route route : cragRoutes) {
             cragRouteNames.add(route.getName());
         }

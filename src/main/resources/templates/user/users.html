@@ -5,6 +5,32 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<div class="row">
+    <div class="col">
+        <div class="btn-group-vertical" data-toggle="buttons">
+            <!--<button type="button" class="btn btn-primary" onclick="location.href='route/add';">Add Route</button>-->
+        </div>
+    </div>
+    <div class="col-10">
+        <h2>All Users</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">User</th>
+                <th scope="col">View</th>
+                <th scope="col">Add</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="user : ${users}">
+                <td th:text="*{user.username}"></td>
+                <td><a th:href="'/user/view/' + ${user.id}">View</a></td>
+                <td><a th:href="'/user/add/' + ${user.id}">Add Friend</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 <div th:replace="fragments :: footer"></div>
 </body>

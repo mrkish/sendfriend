@@ -71,6 +71,7 @@ public class AreaController {
 
         model.addAttribute("title", areaToView.getName());
         model.addAttribute("area", areaToView);
+        model.addAttribute("crags", areaToView.getCrags());
         if (session.getAttribute("user") != null) {
             model.addAttribute("user", session.getAttribute("user"));
         }

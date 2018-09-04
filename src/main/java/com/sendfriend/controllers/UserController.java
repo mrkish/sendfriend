@@ -169,7 +169,7 @@ public class UserController {
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
        for(Beta beta : allUserBetas) {
-           if (beta.isShared() == true) {
+           if (beta.getIsShared()) {
                userPublicBetas.add(beta);
            }
        }

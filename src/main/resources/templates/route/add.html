@@ -5,6 +5,10 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<div class="card text-white bg-primary offset-mb-3 mx-auto field-label-responsive" style="max-width: 20rem;">
+    <div class="card-header">Add New Route</div>
+    <div class="card-body">
+        <p class="card-text">
 <form method="post" style="max-width:600px;" th:object="${route}">
     <div class="form-group">
         <label th:for="name">Name</label>
@@ -36,7 +40,9 @@
     </div>
     <input type="submit" class="btn btn-success" value="Add Route" />
 </form>
-
+        </p>
+    </div>
+</div>
 
 <div th:replace="fragments :: footer"></div>
 </body>

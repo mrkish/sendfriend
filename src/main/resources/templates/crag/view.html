@@ -8,11 +8,11 @@
 <div class="row">
     <div class="col">
         <div class="btn-group-vertical" data-toggle="buttons">
-            <button type="button" class="btn btn-primary" onclick="location.href='area/add';">Add Area</button>
+            <!--<button type="button" class="btn " onclick="location.href='area/add';">Add Area</button>-->
         </div>
     </div>
     <div class="col-10">
-        <h2>All Areas</h2>
+        <h2>All Routes</h2>
         <table class="table table-hover">
             <thead>
             <tr >
@@ -22,10 +22,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="table-default" th:each="area : ${areas}">
-                <td th:text="*{area.name}"></td>
-                <td th:text="*{area.description}"></td>
-                <td><a th:href="'/area/view/' + ${area.id}">View</a></td>
+            <tr class="table-default" th:each="route : ${routes}">
+                <td th:text="*{route.name}"></td>
+                <td th:text="*{route.description}"></td>
+                <td><a th:href="'/route/view/' + ${route.id}">View</a></td>
             </tr>
             </tbody>
         </table>

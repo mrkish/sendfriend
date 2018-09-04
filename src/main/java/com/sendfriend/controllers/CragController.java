@@ -44,6 +44,7 @@ public class CragController {
     public String viewSingleCrag(Model model, HttpSession session, @PathVariable int cragId) {
 
         Crag crag = cragDao.findById(cragId);
+
         if (crag == null) {
             model.addAttribute("errors", "Crag not found");
             return "redirect:/crag";
@@ -51,6 +52,7 @@ public class CragController {
 
         model.addAttribute("title", crag.getName());
         model.addAttribute("crag", crag);
+        model.addAttribute("routes", crag.getRoutes());
         if (session.getAttribute("user") != null) {
             model.addAttribute("user", session.getAttribute("user"));
         }

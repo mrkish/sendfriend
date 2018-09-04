@@ -64,7 +64,7 @@ public class Beta {
         this.description = description;
     }
 
-    public boolean isShared() {
+    public boolean getIsShared() {
         return isShared;
     }
 
