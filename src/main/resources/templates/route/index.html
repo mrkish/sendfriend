@@ -17,15 +17,19 @@
         <thead>
         <tr >
             <th scope="col">Name</th>
-            <th scope="col">Description</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Rate</th>
             <th scope="col">View</th>
         </tr>
         </thead>
         <tbody>
         <tr class="table-default" th:each="route : ${routes}">
             <td th:text="*{route.name}"></td>
-            <td th:text="*{route.description}"></td>
-                <td><a th:href="'/route/view/' + ${route.id}">View</a></td>
+            <td th:text="*{route.grade}"></td>
+            <td th:text="*{route.rating}"></td>
+            <td><a th:href="'/route/rate/' + ${route.id}">Rate</a></td>
+            <td><a th:href="'/route/view/' + ${route.id}">View</a></td>
             </tr>
         </tbody>
         </table>

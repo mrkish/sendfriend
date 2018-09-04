@@ -159,6 +159,20 @@ public class UserController {
         return "user/profile";
     }
 
+    @RequestMapping(value = "profile/betas")
+    public String displayUserBetas(Model model, HttpSession session) {
+
+        if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("title", user.getUsername() + " | Betas");
+        model.addAttribute("betas", betaDao.findByUserId(user.getId()));
+
+        return "user/betas";
+    }
+
    @RequestMapping(value = "profile/{userId}")
     public String viewOtherUserProfile(Model model, HttpSession session, @RequestParam int userId) {
 
