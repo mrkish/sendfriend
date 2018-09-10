@@ -10,7 +10,9 @@
         <property name="hibernate.connection.password">sendit</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <property name="hbm2ddl.auto">update</property>
 
         <mapping class="com.sendfriend.models.User" />
         <mapping class="com.sendfriend.models.Beta" />

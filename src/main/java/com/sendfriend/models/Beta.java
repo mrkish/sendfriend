@@ -1,7 +1,5 @@
 package com.sendfriend.models;
 
-import org.hibernate.annotations.Cascade;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;

@@ -246,7 +246,7 @@ public class UserController {
        dbSession1.close();
 
        Session dbSession2 = HibernateUtil.getSession();
-       User user = (User) dbSession2.get(User.class, userId);
+       User user = dbSession2.get(User.class, currentUser.getId());
        Hibernate.initialize(user.getFriends());
 
        if (currentUser.hasFriend(userToFriend)) {

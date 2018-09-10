@@ -1,6 +1,5 @@
 package com.sendfriend.models;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

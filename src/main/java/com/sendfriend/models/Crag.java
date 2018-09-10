@@ -1,7 +1,5 @@
 package com.sendfriend.models;
 
-import com.sendfriend.models.Route;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
