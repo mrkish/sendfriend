@@ -24,6 +24,7 @@ public class Crag {
     private List<Route> routes = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "area_id")
     private Area area;
 
     public Crag() {}

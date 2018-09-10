@@ -1,10 +1,14 @@
 package com.sendfriend.models;
 
+import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -19,10 +23,24 @@ public class User {
 
     @NotNull
     @Size(min =4, max = 15, message = "Username must be between 4-15 characters.")
+    @Column(unique = true)
     private String username;
 
     @NotNull
+    @Column(unique = true)
     private String email;
+
+    @ManyToMany
+    @JoinTable(name = "shares", joinColumns = @JoinColumn(name = "beta_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<Beta> receivedShares = new ArrayList<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name =  "friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
+    private Set<User> friends = new HashSet<>();
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "friends", joinColumns = @JoinColumn(name = "friend_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> friendsOf = new HashSet<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_id")
@@ -74,5 +92,34 @@ public class User {
 
     public void setBetas(List<Beta> betas) {
         this.betas = betas;
+    }
+
+    public void addFriend(User user) {
+        this.friends.add(user);
+        this.friendsOf.add(this);
+    }
+
+    public void removeFriend(User user) {
+        this.friends.remove(friends);
+        this.friendsOf.remove(this);
+    }
+
+    public boolean isFriendOf(User user) {
+        return friendsOf.contains(user);
+    }
+
+    public boolean hasFriend(User user) {
+        return friends.contains(user);
+    }
+
+    public Set<User> getFriends() {
+        return this.friends;
+    }
+
+    public Set<User> getFriendsInitalized() {
+        Hibernate.initialize(this.friends);
+        Set<User> friends = this.friends;
+
+        return this.friends;
     }
 }

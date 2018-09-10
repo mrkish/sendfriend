@@ -33,6 +33,7 @@ public class Route {
     private List<Beta> betas = new ArrayList<>();
 
     @ManyToOne
+    @JoinColumn(name = "crag_id")
     private Crag crag;
 
     public Route() {}

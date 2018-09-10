@@ -2,6 +2,8 @@ package com.sendfriend.controllers;
 
 import com.sendfriend.models.*;
 import com.sendfriend.models.data.*;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -155,8 +157,9 @@ public class UserController {
         User user = userDao.findByUsername(username.getUsername());
         model.addAttribute("title", user.getUsername() + " | Profile");
         model.addAttribute("betas", betaDao.findByUserId(user.getId()));
+        model.addAttribute("friends", user.getFriends());
 
-        return "user/profile";
+        return "user/profile/view";
     }
 
     @RequestMapping(value = "profile/betas")
@@ -170,10 +173,27 @@ public class UserController {
         model.addAttribute("title", user.getUsername() + " | Betas");
         model.addAttribute("betas", betaDao.findByUserId(user.getId()));
 
-        return "user/betas";
+        return "user/profile/betas";
     }
 
-   @RequestMapping(value = "profile/{userId}")
+    @RequestMapping(value = "profile/share-beta")
+    public String displayShareBetaForm(Model model, HttpSession session) {
+
+        if (session.getAttribute("user") != null) {
+            model.addAttribute("user", session.getAttribute("user"));
+        } else if (session.getAttribute("user") == null) {
+            return "redirect:/login";
+        }
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("betas", user.getBetas());
+        model.addAttribute("title", "Share Beta");
+
+        return "user/profile/share-beta";
+    }
+
+
+    @RequestMapping(value = "profile/{userId}")
     public String viewOtherUserProfile(Model model, HttpSession session, @RequestParam int userId) {
 
        if (session.getAttribute("user") != null) {
@@ -195,5 +215,47 @@ public class UserController {
        model.addAttribute("title", userProfile + " | Profile");
 
         return "/user/view-profile";
+   }
+
+   @RequestMapping(value = "user", method = RequestMethod.GET)
+   public String displayUserIndex(Model model, HttpSession session) {
+
+       model.addAttribute("title", "Sendfriend! | Users");
+       model.addAttribute("users", userDao.findAll());
+       if (session.getAttribute("user") != null) {
+           model.addAttribute("user", session.getAttribute("user"));
+       }
+
+        return "user/users";
+   }
+
+   @RequestMapping(value = "user/add-friend/{userId}")
+    public String addFriend(Model model, HttpSession session, @PathVariable int userId) {
+
+       if (session.getAttribute("user") == null) {
+           model.addAttribute("error", "You're not logged in or registered!");
+           return "redirect:user/users";
+       }
+
+       User userToFriend = userDao.findById(userId);
+       User currentUser = (User) session.getAttribute("user");
+       Session dbSession1 = HibernateUtil.getSession();
+       dbSession1.beginTransaction();
+
+       dbSession1.getTransaction().commit();
+       dbSession1.close();
+
+       Session dbSession2 = HibernateUtil.getSession();
+       User user = (User) dbSession2.get(User.class, userId);
+       Hibernate.initialize(user.getFriends());
+
+       if (currentUser.hasFriend(userToFriend)) {
+           model.addAttribute("error", "You're already friends!");
+       } else {
+           currentUser.addFriend(userToFriend);
+       }
+       dbSession2.close();
+
+       return "user/profile/view";
    }
 }

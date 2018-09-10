@@ -2,6 +2,7 @@ package com.sendfriend.models.data;
 
 import com.sendfriend.models.Beta;
 import com.sendfriend.models.User;
+import org.hibernate.Session;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
