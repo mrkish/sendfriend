@@ -186,12 +186,14 @@ public class UserController {
         }
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("betas", user.getBetas());
+        List<Beta> userBetas = new ArrayList<>();
+        userBetas = (List<Beta>) userDao.getUserBetaByUsername(user.getUsername());
+
+        model.addAttribute("betas", userBetas);
         model.addAttribute("title", "Share Beta");
 
         return "user/profile/share-beta";
     }
-
 
     @RequestMapping(value = "profile/{userId}")
     public String viewOtherUserProfile(Model model, HttpSession session, @RequestParam int userId) {
@@ -203,7 +205,7 @@ public class UserController {
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
        for(Beta beta : allUserBetas) {
-           if (beta.getIsShared()) {
+           if (beta.getIsPublic()) {
                userPublicBetas.add(beta);
            }
        }
@@ -239,22 +241,15 @@ public class UserController {
 
        User userToFriend = userDao.findById(userId);
        User currentUser = (User) session.getAttribute("user");
-       Session dbSession1 = HibernateUtil.getSession();
-       dbSession1.beginTransaction();
 
-       dbSession1.getTransaction().commit();
-       dbSession1.close();
+       List<User> currentUserFriends = userDao.getUserFriendsByUsername(currentUser.getUsername());
 
-       Session dbSession2 = HibernateUtil.getSession();
-       User user = dbSession2.get(User.class, currentUser.getId());
-       Hibernate.initialize(user.getFriends());
-
-       if (currentUser.hasFriend(userToFriend)) {
+       if (currentUserFriends.contains(userToFriend)) {
            model.addAttribute("error", "You're already friends!");
        } else {
            currentUser.addFriend(userToFriend);
+           userDao.save(currentUser);
        }
-       dbSession2.close();
 
        return "user/profile/view";
    }

@@ -112,7 +112,7 @@ public class BetaController {
     public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors,
                                      @RequestParam(required = false) Integer cragId, @RequestParam String routeName,
                                      @RequestParam(required = false) String cragName, @RequestParam int userId,
-                                     @RequestParam int areaId, boolean isShared) {
+                                     @RequestParam int areaId, boolean isPublic) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Beta");
@@ -135,7 +135,7 @@ public class BetaController {
             routeDao.save(newRoute);
 
             newBeta.setRoute(newRoute);
-            newBeta.setIsShared(isShared);
+            newBeta.setIsPublic(isPublic);
             newBeta.setUser(user);
             betaDao.save(newBeta);
 
@@ -172,7 +172,7 @@ public class BetaController {
                 for (Route route : foundRoutes) {
                     if (route.getCrag().equals(crag.getName())) {
                         newBeta.setRoute(route);
-                        newBeta.setIsShared(isShared);
+                        newBeta.setIsPublic(isPublic);
                         newBeta.setUser(user);
                         betaDao.save(newBeta);
 
@@ -194,7 +194,7 @@ public class BetaController {
         routeDao.save(newRoute);
 
         newBeta.setRoute(newRoute);
-        newBeta.setIsShared(isShared);
+        newBeta.setIsPublic(isPublic);
         newBeta.setUser(user);
         betaDao.save(newBeta);
 

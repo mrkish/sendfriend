@@ -128,7 +128,7 @@ public class RouteController {
         List<Beta> publicBetas = new ArrayList<>();
 
         for (Beta beta : allBetas) {
-            if (beta.getIsShared()) {
+            if (beta.getIsPublic()) {
                 publicBetas.add(beta);
             }
         }

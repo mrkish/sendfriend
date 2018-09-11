@@ -16,7 +16,6 @@ public class Beta {
     private String description;
 
     @NotNull
-    @Column(name = "isPublic")
     private boolean isPublic = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -29,7 +28,9 @@ public class Beta {
     @ManyToOne
     private Route route;
 
-    public Beta() {}
+    public Beta() {
+        this.isPublic = false;
+    }
 
     public Beta(String description) {
         this.description = description;
@@ -68,11 +69,11 @@ public class Beta {
         this.description = description;
     }
 
-    public boolean getIsShared() {
+    public boolean getIsPublic() {
         return isPublic;
     }
 
-    public void setIsShared(boolean isPublic) {
+    public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
 
@@ -96,7 +97,7 @@ public class Beta {
         return isPublic;
     }
 
-    public void setShared(boolean shared) {
+    public void setPublic(boolean shared) {
         isPublic = shared;
     }
 
@@ -108,7 +109,7 @@ public class Beta {
         this.shares = shares;
     }
 
-    public void addshare(User user) {
+    public void addShare(User user) {
         this.shares.add(user);
     }
 
