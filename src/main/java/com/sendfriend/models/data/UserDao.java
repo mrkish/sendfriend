@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 @Transactional
@@ -24,18 +25,18 @@ public interface UserDao extends CrudRepository<User, Integer> {
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.betas WHERE u.username = :username")
-    List<Beta> getUserBetaByUsername(@Param("username") String username);
+    Set<Beta> getUserBetaByUsername(@Param("username") String username);
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.betas WHERE u.id = :id")
-    List<Beta> getUserBetaByUserId(@Param("id") String id);
+    Set<Beta> getUserBetaByUserId(@Param("id") String id);
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.friends WHERE u.username = :username")
-    List<User> getUserFriendsByUsername(@Param("username") String username);
+    Set<User> getUserFriendsByUsername(@Param("username") String username);
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.friends WHERE u.id = :id")
-    List<User> getUserFriendsByUserId(@Param("id") String id);
+    Set<User> getUserFriendsByUserId(@Param("id") String id);
 }
 

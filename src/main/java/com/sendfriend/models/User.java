@@ -112,6 +112,11 @@ public class User {
         return friends.contains(user);
     }
 
+    public void setFriends(Set<User> friends) {
+        this.friends.clear();
+        this.friends.addAll(friends);
+    }
+
     public Set<User> getFriends() {
         return this.friends;
     }

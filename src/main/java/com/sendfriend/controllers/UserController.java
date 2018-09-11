@@ -14,6 +14,7 @@ import javax.servlet.http.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Controller
@@ -242,12 +243,13 @@ public class UserController {
        User userToFriend = userDao.findById(userId);
        User currentUser = (User) session.getAttribute("user");
 
-       List<User> currentUserFriends = userDao.getUserFriendsByUsername(currentUser.getUsername());
+       Set<User> currentUserFriends = userDao.getUserFriendsByUsername(currentUser.getUsername());
 
        if (currentUserFriends.contains(userToFriend)) {
            model.addAttribute("error", "You're already friends!");
        } else {
-           currentUser.addFriend(userToFriend);
+           currentUserFriends.add(userToFriend);
+           currentUser.setFriends(currentUserFriends);
            userDao.save(currentUser);
        }
 
