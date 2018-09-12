@@ -34,11 +34,11 @@ public class User {
     @JoinTable(name = "shares", joinColumns = @JoinColumn(name = "beta_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Beta> receivedShares = new ArrayList<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name =  "friends", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "friend_id"))
     private Set<User> friends = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "friends", joinColumns = @JoinColumn(name = "friend_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> friendsOf = new HashSet<>();
 

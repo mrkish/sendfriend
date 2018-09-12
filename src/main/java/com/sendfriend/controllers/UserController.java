@@ -241,15 +241,16 @@ public class UserController {
        }
 
        User userToFriend = userDao.findById(userId);
-       User currentUser = (User) session.getAttribute("user");
 
-       Set<User> currentUserFriends = userDao.getUserFriendsByUsername(currentUser.getUsername());
+       String currentUsername = ((User) session.getAttribute("user")).getUsername();
+       User currentUser = userDao.findByUsername(currentUsername);
+       Set<User> currentUserFriends = currentUser.getFriends();
 
        if (currentUserFriends.contains(userToFriend)) {
            model.addAttribute("error", "You're already friends!");
        } else {
-           currentUserFriends.add(userToFriend);
-           currentUser.setFriends(currentUserFriends);
+//           currentUserFriends.add(userToFriend);
+           currentUser.addFriend(userToFriend);
            userDao.save(currentUser);
        }
 
