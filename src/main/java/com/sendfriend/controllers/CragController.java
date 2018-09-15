@@ -11,13 +11,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "crag")
-public class CragController {
+public class CragController extends AbstractController {
 
     @Autowired
     private CragDao cragDao;
@@ -29,19 +30,19 @@ public class CragController {
     private AreaDao areaDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, HttpSession session) {
+    public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Crags");
         model.addAttribute("crags", cragDao.findAll());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "crag/index";
     }
 
     @RequestMapping(value = "view/{cragId}")
-    public String viewSingleCrag(Model model, HttpSession session, @PathVariable int cragId) {
+    public String viewSingleCrag(Model model, HttpServletRequest request, @PathVariable int cragId) {
 
         Crag crag = cragDao.findById(cragId);
 
@@ -53,28 +54,28 @@ public class CragController {
         model.addAttribute("title", crag.getName());
         model.addAttribute("crag", crag);
         model.addAttribute("routes", crag.getRoutes());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "crag/view";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String displayAddCragForm(Model model, HttpSession session) {
+    public String displayAddCragForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Crag");
         model.addAttribute(new Crag());
         model.addAttribute("areas", areaDao.findAll());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "crag/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddCragForm(Model model, HttpSession session, @ModelAttribute @Valid Crag crag, Errors errors, String area) {
+    public String processAddCragForm(Model model, @ModelAttribute @Valid Crag crag, Errors errors, String area) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Crag");

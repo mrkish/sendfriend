@@ -26,7 +26,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "route")
-public class RouteController {
+public class RouteController extends AbstractController {
 
     @Autowired
     private UserDao userDao;
@@ -38,31 +38,31 @@ public class RouteController {
     private RouteDao routeDao;
 
     @RequestMapping(value = "")
-    public String routeIndex(Model model, HttpSession session) {
+    public String routeIndex(Model model, HttpServletRequest request) {
 
         model.addAttribute("routes", routeDao.findAll());
         model.addAttribute("title", "Routes");
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "route/index";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String displayRouteAddForm(Model model, HttpSession session) {
+    public String displayRouteAddForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Route!");
         model.addAttribute(new Route());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "route/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processRouteAddForm(Model model, HttpSession session, @ModelAttribute @Valid Route route, Errors errors) {
+    public String processRouteAddForm(Model model, @ModelAttribute @Valid Route route, Errors errors) {
 
         List<Route> routeNames = routeDao.findByName(route.getName());
 
@@ -79,7 +79,7 @@ public class RouteController {
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.GET)
-    public String displayEditRouteForm(Model model, HttpSession session) {
+    public String displayEditRouteForm(Model model) {
 
         model.addAttribute("title", "Edit Route");
         model.addAttribute(new Route());
@@ -88,7 +88,7 @@ public class RouteController {
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public String displayEditRouteForm(Model model, HttpSession session, @ModelAttribute @Valid Route route, Errors errors) {
+    public String displayEditRouteForm(Model model, HttpServletRequest request, @ModelAttribute @Valid Route route, Errors errors) {
 
 
 
@@ -96,7 +96,7 @@ public class RouteController {
     }
 
     @RequestMapping(value = "view/{routeId}", method = RequestMethod.GET)
-    public String displaySingleRoute(Model model, HttpSession session, @PathVariable int routeId) {
+    public String displaySingleRoute(Model model, @PathVariable int routeId) {
 
         Route route = routeDao.findById(routeId);
         model.addAttribute("title", "Route: " + route.getName());
@@ -108,15 +108,15 @@ public class RouteController {
     }
 
     @RequestMapping(value = "view/{routeId}?beta={betaId}")
-    public String viewRouteSingleBeta(Model model, HttpSession session, @PathVariable int betaId, @PathVariable int routeId) {
+    public String viewRouteSingleBeta(Model model, HttpServletRequest request, @PathVariable int betaId, @PathVariable int routeId) {
 
         Beta beta = betaDao.findById(betaId);
         Route route = routeDao.findById(routeId);
         model.addAttribute("beta", beta);
         model.addAttribute("route", route);
         model.addAttribute("title", "Beta: " + beta.getRoute());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "beta/view" + beta.getId();

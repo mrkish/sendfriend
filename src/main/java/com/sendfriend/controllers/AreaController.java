@@ -9,12 +9,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping(value = "area")
-public class AreaController {
+public class AreaController extends AbstractController {
 
     @Autowired
     private AreaDao areaDao;
@@ -23,31 +24,31 @@ public class AreaController {
     private UserDao userDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, HttpSession session) {
+    public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Areas");
         model.addAttribute("areas", areaDao.findAll());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "area/index";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String displayAddAreaForm(Model model, HttpSession session) {
+    public String displayAddAreaForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Area");
         model.addAttribute(new Area());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "area/add";
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddAreaForm(Model model, HttpSession session, @ModelAttribute @Valid Area area, Errors errors) {
+    public String processAddAreaForm(Model model, @ModelAttribute @Valid Area area, Errors errors) {
 
        if (errors.hasErrors()) {
            model.addAttribute("title", "Add Area");
@@ -60,7 +61,7 @@ public class AreaController {
     }
 
     @RequestMapping(value = "view/{areaId}")
-    public String viewArea(Model model, HttpSession session, @PathVariable int areaId) {
+    public String viewArea(Model model, HttpServletRequest request, @PathVariable int areaId) {
 
         Area areaToView = areaDao.findById(areaId);
 
@@ -72,8 +73,8 @@ public class AreaController {
         model.addAttribute("title", areaToView.getName());
         model.addAttribute("area", areaToView);
         model.addAttribute("crags", areaToView.getCrags());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "area/view";

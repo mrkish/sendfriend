@@ -6,7 +6,7 @@ import javax.validation.constraints.Pattern;
 public class LoginForm {
 
     @NotNull
-    @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9_-]{4,11}", message = "Usernames must be between 5 and 12 characters, start with a letter, and contain only letters and numbers")
+    @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9_-]{3,11}", message = "Usernames must be between 4 and 12 characters, start with a letter, and contain only letters and numbers")
     private String username;
 
     @NotNull
