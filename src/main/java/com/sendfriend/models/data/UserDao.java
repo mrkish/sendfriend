@@ -16,6 +16,7 @@ import java.util.Set;
 public interface UserDao extends CrudRepository<User, Integer> {
     User findByUsername(String username);
     User findById(int userId);
+    User findOne(Integer userId);
 
     @Transactional
     @Query("SELECT u " +

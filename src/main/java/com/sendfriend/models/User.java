@@ -4,6 +4,7 @@ import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,20 +12,17 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-public class User {
+public class User extends AbstractEntity {
 
-    @Id
-    @GeneratedValue
-    private int id;
+    @NotNull
+    @Size(min =4, max = 15, message = "Username must be between 4-15 characters.")
+    @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9_-]{4,11}", message = "Invalid username")
+    @Column(unique = true)
+    private String username;
 
     @NotNull
     @Size(min = 4, max = 15)
     private String password;
-
-    @NotNull
-    @Size(min =4, max = 15, message = "Username must be between 4-15 characters.")
-    @Column(unique = true)
-    private String username;
 
     @NotNull
     @Column(unique = true)
@@ -52,14 +50,6 @@ public class User {
         this.username = username;
         this.password = password;
         this.email = email;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getPassword() {
