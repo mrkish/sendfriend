@@ -4,8 +4,6 @@ import com.sendfriend.models.*;
 import com.sendfriend.models.data.*;
 import com.sendfriend.models.forms.LoginForm;
 import com.sendfriend.models.forms.RegisterForm;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,7 +37,7 @@ public class UserController extends AbstractController {
     private BetaDao betaDao;
 
     @RequestMapping(value = "")
-    public String index(Model model, HttpServletRequest request) {
+    public String index(Model model) {
 
         model.addAttribute("title", "Sendfriend! | Index");
         model.addAttribute("users", userDao.findAll());
@@ -57,10 +55,6 @@ public class UserController extends AbstractController {
             } while (!model.containsAttribute("featured") || routes.size() == 0);
         }
 
-//        if (request.getSession().getAttribute("user") != null) {
-//            model.addAttribute("user", request.getSession().getAttribute("user"));
-//        }
-
         return "user/index";
     }
 
@@ -69,7 +63,6 @@ public class UserController extends AbstractController {
 
         model.addAttribute("title", "Sendfriend | Register New User");
         model.addAttribute(new RegisterForm());
-
         return "user/register";
     }
 
@@ -103,7 +96,7 @@ public class UserController extends AbstractController {
     }
 
     @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String processLogin(@ModelAttribute @Valid LoginForm form, Model model, Errors errors, HttpServletRequest request) {
+    public String processLogin(@ModelAttribute @Valid LoginForm form, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
             return "login";
@@ -134,28 +127,19 @@ public class UserController extends AbstractController {
     }
 
     @RequestMapping(value = "user")
-    public String userIndex(Model model, HttpServletRequest request) {
+    public String userIndex(Model model) {
 
        model.addAttribute("title", "Sendfriend! | Index");
        model.addAttribute("users", userDao.findAll());
-       if (request.getSession().getAttribute("user") != null) {
-           model.addAttribute("user", request.getSession().getAttribute("user"));
-       }
-
        return "user/users";
     }
 
     @RequestMapping(value = "profile")
     public String displayCurrentUserProfile(Model model, HttpServletRequest request) {
 
-        if (request.getSession().getAttribute("user") != null) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
-        } else if (request.getSession().getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-
-        User username = (User) request.getSession().getAttribute("user");
-        User user = userDao.findByUsername(username.getUsername());
+        HttpSession session = request.getSession();
+        String username = getUserFromSession(session).getUsername();
+        User user = userDao.findByUsername(username);
         model.addAttribute("title", user.getUsername() + " | Profile");
         model.addAttribute("betas", betaDao.findByUserId(user.getId()));
         model.addAttribute("friends", user.getFriends());
@@ -166,10 +150,6 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "profile/betas")
     public String displayUserBetas(Model model, HttpServletRequest request) {
 
-        if (request.getSession().getAttribute("user") == null) {
-            return "redirect:/login";
-        }
-
         User user = (User) request.getSession().getAttribute("user");
         model.addAttribute("title", user.getUsername() + " | Betas");
         model.addAttribute("betas", betaDao.findByUserId(user.getId()));
@@ -179,12 +159,6 @@ public class UserController extends AbstractController {
 
     @RequestMapping(value = "profile/share-beta")
     public String displayShareBetaForm(Model model, HttpServletRequest request) {
-
-        if (request.getSession().getAttribute("user") != null) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
-        } else if (request.getSession().getAttribute("user") == null) {
-            return "redirect:/login";
-        }
 
         User user = (User) request.getSession().getAttribute("user");
         List<Beta> userBetas = new ArrayList<>();
@@ -197,11 +171,7 @@ public class UserController extends AbstractController {
     }
 
     @RequestMapping(value = "profile/{userId}")
-    public String viewOtherUserProfile(Model model, HttpServletRequest request, @RequestParam int userId) {
-
-       if (request.getSession().getAttribute("user") != null) {
-           model.addAttribute("user", request.getSession().getAttribute("user"));
-       }
+    public String viewOtherUserProfile(Model model, @RequestParam int userId) {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
@@ -221,37 +191,31 @@ public class UserController extends AbstractController {
    }
 
    @RequestMapping(value = "user", method = RequestMethod.GET)
-   public String displayUserIndex(Model model, HttpServletRequest request) {
+   public String displayUserIndex(Model model) {
 
        model.addAttribute("title", "Sendfriend! | Users");
        model.addAttribute("users", userDao.findAll());
-       if (request.getSession().getAttribute("user") != null) {
-           model.addAttribute("user", request.getSession().getAttribute("user"));
-       }
-
-        return "user/users";
+       return "user/users";
    }
 
    @RequestMapping(value = "user/add-friend/{userId}")
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
-       if (request.getSession().getAttribute("user") == null) {
-           model.addAttribute("error", "You're not logged in or registered!");
-           return "redirect:user/users";
-       }
+       User currentUser = getUserFromSession(request.getSession());
+       String username = currentUser.getUsername();
+       User userFromDAO = userDao.findByUsername(username); // To open DB session/load collections
+
+       Set<User> currentUserFriends = userFromDAO.getFriends();
 
        User userToFriend = userDao.findById(userId);
-
-       String currentUsername = ((User) request.getSession().getAttribute("user")).getUsername();
-       User currentUser = userDao.findByUsername(currentUsername);
-       Set<User> currentUserFriends = currentUser.getFriends();
 
        if (currentUserFriends.contains(userToFriend)) {
            model.addAttribute("error", "You're already friends!");
        } else {
-//           currentUserFriends.add(userToFriend);
-           currentUser.addFriend(userToFriend);
-           userDao.save(currentUser);
+           userFromDAO.addFriend(userToFriend);
+           userDao.save(userFromDAO);
+           userToFriend.addFriend(currentUser);
+           userDao.save(userToFriend);
        }
 
        return "user/profile/view";

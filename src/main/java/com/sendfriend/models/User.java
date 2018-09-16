@@ -1,7 +1,5 @@
 package com.sendfriend.models;
 
-import org.hibernate.Hibernate;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;

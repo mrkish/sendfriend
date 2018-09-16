@@ -7,16 +7,35 @@
 
 <div class="btn-group-vertical" data-toggle="buttons">
     <button type="button" class="btn btn-primary" onclick="location.href='profile';">Profile</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='profile/stats';">Stats</button>
+    <button type="button" class="btn btn-primary" onclick="location.href='profile/friends';">Friends</button>
     <button type="button" class="btn btn-primary" onclick="location.href='beta/select-area';">Add Beta</button>
     <button type="button" class="btn btn-primary" onclick="location.href='profile/betas';">Betas</button>
     <button type="button" class="btn btn-primary" onclick="location.href='profile/shared-betas';">Shared Betas</button>
-    <button type="button" class="btn btn-primary" onclick="location.href='profile/stats';">Stats</button>
 </div>
 
 <div>
-    <h2 th:text="${username}" th:value="*{username}"></h2>
+    <h2 th:text="${user.username}" th:value="*{user.username}"></h2>
     <div></div>
 
+    <div class="col-10">
+        <h2>Friends</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">Name</th>
+                <th scope="col">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="friend : ${friends}">
+                <td th:text="*{friend.username}"></td>
+                <td><a th:href="'/user/view/' + ${friend.id}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 </div>
 
