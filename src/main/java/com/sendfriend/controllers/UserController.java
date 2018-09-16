@@ -154,10 +154,11 @@ public class UserController {
             return "redirect:/login";
         }
 
-        User username = (User) session.getAttribute("user");
-        User user = userDao.findByUsername(username.getUsername());
+        String username = ((User) session.getAttribute("user")).getUsername();
+        User user = userDao.findByUsername(username);
+        List<Beta> userBeta = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
         model.addAttribute("title", user.getUsername() + " | Profile");
-        model.addAttribute("betas", betaDao.findByUserId(user.getId()));
+        model.addAttribute("betas", userBeta);
         model.addAttribute("friends", user.getFriends());
 
         return "user/profile/view";
@@ -205,6 +206,7 @@ public class UserController {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
+//       Set<User> friends = user.getFriends();
        for(Beta beta : allUserBetas) {
            if (beta.getIsPublic()) {
                userPublicBetas.add(beta);

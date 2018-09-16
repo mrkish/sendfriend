@@ -29,7 +29,7 @@ public interface UserDao extends CrudRepository<User, Integer> {
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.betas WHERE u.id = :id")
-    Set<Beta> getUserBetaByUserId(@Param("id") String id);
+    Set<Beta> getUserBetaByUserId(@Param("id") int id);
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.friends WHERE u.username = :username")
