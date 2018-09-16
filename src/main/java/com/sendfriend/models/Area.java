@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Area {
-
-    @Id
-    @GeneratedValue
-    private int id;
+public class Area extends AbstractEntity {
 
     @NotNull
     private String name;
@@ -32,14 +28,6 @@ public class Area {
     public Area(@NotNull String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getName() {

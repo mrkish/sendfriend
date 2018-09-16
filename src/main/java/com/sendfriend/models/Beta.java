@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Beta {
-
-    @Id
-    @GeneratedValue
-    private int id;
+public class Beta extends AbstractEntity {
 
     @NotNull
     private String description;
@@ -51,14 +47,6 @@ public class Beta {
         this.route = route;
         this.user = user;
         this.isPublic = isPublic;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getDescription() {

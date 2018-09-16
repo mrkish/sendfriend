@@ -9,11 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Route {
-
-    @Id
-    @GeneratedValue
-    private int id;
+public class Route extends AbstractEntity {
 
     @NotNull
     @Size(min = 1, max = 25)
@@ -45,14 +41,6 @@ public class Route {
         this.name = name;
         this.grade = grade;
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

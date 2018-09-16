@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 @RequestMapping(value = "beta")
-public class BetaController {
+public class BetaController extends AbstractController {
 
     @Autowired
     private UserDao userDao;
@@ -36,26 +36,26 @@ public class BetaController {
     private BetaDao betaDao;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
-    public String displayAllBeta(Model model, HttpSession session) {
+    public String displayAllBeta(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Betas");
         model.addAttribute("betas", betaDao.findAll());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "beta/index";
     }
 
     @RequestMapping(value = "select-area")
-    public String displaySelectAreaForm(Model model, HttpSession session) {
+    public String displaySelectAreaForm(Model model, HttpServletRequest request) {
 
-        if (session.getAttribute("user") == null) {
+        if (request.getSession().getAttribute("user") == null) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
 
             return "redirect:/beta";
-        } else if (session.getAttribute("user") != null) {
-            User username = (User) session.getAttribute("user");
+        } else if (request.getSession().getAttribute("user") != null) {
+            User username = (User) request.getSession().getAttribute("user");
             User user = userDao.findByUsername(username.getUsername());
             model.addAttribute("user", user);
         }
@@ -65,21 +65,21 @@ public class BetaController {
 
         model.addAttribute("areas", areasOptions);
         model.addAttribute("title", "Select Area");
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "beta/select-area";
     }
 
     @RequestMapping(value = "add")
-    public String displayAddBetaForm(Model model, HttpSession session, @RequestParam(required = false) String newAreaName, @RequestParam int areaId) {
+    public String displayAddBetaForm(Model model, HttpServletRequest request, @RequestParam(required = false) String newAreaName, @RequestParam int areaId) {
 
-        if (session.getAttribute("user") == null) {
+        if (request.getSession().getAttribute("user") == null) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
             return "beta/index";
-        } else if (session.getAttribute("user") != null) {
-            User username = (User) session.getAttribute("user");
+        } else if (request.getSession().getAttribute("user") != null) {
+            User username = (User) request.getSession().getAttribute("user");
             User user = userDao.findByUsername(username.getUsername());
             model.addAttribute("user", user);
         }
@@ -109,7 +109,7 @@ public class BetaController {
     }
 
     @RequestMapping(value = "process-add", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, HttpSession session, @Valid Beta newBeta, Errors errors,
+    public String processAddBetaForm(Model model, HttpServletRequest request, @Valid Beta newBeta, Errors errors,
                                      @RequestParam(required = false) Integer cragId, @RequestParam String routeName,
                                      @RequestParam(required = false) String cragName, @RequestParam int userId,
                                      @RequestParam int areaId, boolean isPublic) {
@@ -145,8 +145,8 @@ public class BetaController {
             model.addAttribute("beta", newBeta);
             model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
             model.addAttribute("routeId", newRoute.getId());
-            if (session.getAttribute("user") != null) {
-                model.addAttribute("user", session.getAttribute("user"));
+            if (request.getSession().getAttribute("user") != null) {
+                model.addAttribute("user", request.getSession().getAttribute("user"));
             }
 
             return "redirect:/beta/view/" + newBeta.getId();
@@ -179,8 +179,8 @@ public class BetaController {
                         model.addAttribute("beta", newBeta);
                         model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
                         model.addAttribute("routeId", route.getId());
-                        if (session.getAttribute("user") != null) {
-                            model.addAttribute("user", session.getAttribute("user"));
+                        if (request.getSession().getAttribute("user") != null) {
+                            model.addAttribute("user", request.getSession().getAttribute("user"));
                         }
 
                         return "redirect:/beta/view/" + newBeta.getId();
@@ -201,15 +201,15 @@ public class BetaController {
         model.addAttribute("beta", newBeta);
         model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
         model.addAttribute("routeId", newRoute.getId());
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "redirect:/beta/view/" + newBeta.getId();
     }
 
     @RequestMapping(value = "view/{betaId}")
-    public String viewSingleBeta(Model model, HttpSession session, @PathVariable int betaId) {
+    public String viewSingleBeta(Model model, HttpServletRequest request, @PathVariable int betaId) {
 
         Beta beta = betaDao.findById(betaId);
         Route route = routeDao.findById(beta.getRoute().getId());
@@ -222,8 +222,8 @@ public class BetaController {
         model.addAttribute("title", "View Beta for " + route.getName());
         model.addAttribute("route", route);
         model.addAttribute("beta", beta);
-        if (session.getAttribute("user") != null) {
-            model.addAttribute("user", session.getAttribute("user"));
+        if (request.getSession().getAttribute("user") != null) {
+            model.addAttribute("user", request.getSession().getAttribute("user"));
         }
 
         return "beta/view";

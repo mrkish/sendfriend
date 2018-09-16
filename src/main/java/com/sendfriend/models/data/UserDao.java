@@ -16,6 +16,7 @@ import java.util.Set;
 public interface UserDao extends CrudRepository<User, Integer> {
     User findByUsername(String username);
     User findById(int userId);
+    User findUserById(Integer userId);
 
     @Transactional
     @Query("SELECT u " +
@@ -37,6 +38,6 @@ public interface UserDao extends CrudRepository<User, Integer> {
 
     @Transactional
     @Query("SELECT u FROM User u JOIN FETCH u.friends WHERE u.id = :id")
-    Set<User> getUserFriendsByUserId(@Param("id") String id);
+    Set<User> getUserFriendsByUserId(@Param("id") int id);
 }
 

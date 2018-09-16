@@ -6,11 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Crag {
-
-    @Id
-    @GeneratedValue
-    private int id;
+public class Crag extends AbstractEntity {
 
     @NotNull
     private String name;
@@ -34,14 +30,6 @@ public class Crag {
     public Crag(@NotNull String name, String description) {
         this.name = name;
         this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {

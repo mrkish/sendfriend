@@ -1,9 +1,10 @@
 package com.sendfriend.models;
 
-import org.hibernate.Hibernate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,20 +12,17 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-public class User {
-
-    @Id
-    @GeneratedValue
-    private int id;
+public class User extends AbstractEntity {
 
     @NotNull
-    @Size(min = 4, max = 15)
-    private String password;
-
-    @NotNull
-    @Size(min =4, max = 15, message = "Username must be between 4-15 characters.")
+    @Size(min = 3, max = 15, message = "Username must be between 3-15 characters.")
+    @Pattern(regexp = "[a-zA-Z][a-zA-Z0-9_-]{3,15}", message = "Invalid username")
     @Column(unique = true)
     private String username;
+
+    @NotNull
+    private String pwHash;
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @NotNull
     @Column(unique = true)
@@ -42,32 +40,25 @@ public class User {
     @JoinTable(name = "friends", joinColumns = @JoinColumn(name = "friend_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> friendsOf = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
     @JoinTable(name = "user_id")
     private List<Beta> betas = new ArrayList<>();
 
     public User() { }
 
+    public User(String username, String password) {
+        this.username = username;
+        this.pwHash= hashPassword(password);
+    }
+
     public User(String username, String password, String email) {
         this.username = username;
-        this.password = password;
+        this.pwHash= hashPassword(password);
         this.email = email;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    private static String hashPassword(String password) {
+        return encoder.encode(password);
     }
 
     public String getUsername() {
@@ -80,6 +71,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setPwHash(String password) {
+        this.pwHash = hashPassword(password);
     }
 
     public void setEmail(String email) {
@@ -121,10 +116,7 @@ public class User {
         return this.friends;
     }
 
-    public Set<User> getFriendsInitalized() {
-        Hibernate.initialize(this.friends);
-        Set<User> friends = this.friends;
-
-        return this.friends;
+    public boolean isMatchingPassword(String password) {
+        return encoder.matches(password, pwHash);
     }
 }
