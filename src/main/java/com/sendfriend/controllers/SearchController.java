@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -42,9 +43,9 @@ public class SearchController extends AbstractController {
     }
 
     @RequestMapping(value = "results")
-    public List<List<Object>> search(Model model, @ModelAttribute SearchForm searchForm) {
+    public HashMap<String, List<Object>> search(Model model, @ModelAttribute SearchForm searchForm) {
 
-        List<List<Object>> results = new ArrayList<>();
+        HashMap<String, List<Object>> results = new HashMap<>();
         List<User> userResults = new ArrayList<>();
         List<Route> routeResults = new ArrayList<>();
         List<Crag> cragResults = new ArrayList<>();
@@ -52,22 +53,22 @@ public class SearchController extends AbstractController {
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.USER)) {
             userResults.add(userDao.findByUsername(searchForm.getKeyword()));
-            results.add(Collections.singletonList(userResults));
+            results.put("user", Collections.singletonList(userResults));
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.ROUTE)) {
             routeResults.add((Route) routeDao.findByName(searchForm.getKeyword()));
-            results.add(Collections.singletonList(routeResults));
+            results.put("route", Collections.singletonList(routeResults));
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.CRAG)) {
             cragResults.add((Crag) cragDao.findByName(searchForm.getKeyword()));
-            results.add(Collections.singletonList(cragResults));
+            results.put("crag", Collections.singletonList(cragResults));
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.AREA)) {
             areaResults.add((Area) areaDao.findByName(searchForm.getKeyword()));
-            results.add(Collections.singletonList(areaResults));
+            results.put("area", Collections.singletonList(areaResults));
         }
 
         return results;

@@ -89,6 +89,10 @@ public class Beta extends AbstractEntity {
         isPublic = shared;
     }
 
+    public boolean isShared() {
+        return this.shares.size() >= 1;
+    }
+
     public List<User> getShares() {
         return shares;
     }

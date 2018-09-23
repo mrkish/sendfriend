@@ -12,9 +12,6 @@
     <form th:action="@{/search/results}" th:object="${searchForm}">
         <h2>Search by:</h2>
 
-
-
-
         <ul class="form-group">
             <li th:each="field : *{fields}">
                 <input type="radio" th:field="*{searchField}" th:value="${field}" th:checked="${field == searchField}"/>
@@ -32,7 +29,7 @@
 
     <hr />
 
-    <div th:replace="list-jobs :: jobs-list"></div>
+    <div th:replace="list-results:: results-list"></div>
 
 </div>
 

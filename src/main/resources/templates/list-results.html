@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head">
+</head>
+<body>
+
+<div th:replace="fragments :: page-header"></div>
+
+<div class="container body-content">
+
+    <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
+
+    <div th:unless="${results} and ${results.size()}">
+        <h2>No Results</h2>
+    </div>
+
+    <div th:fragment="results-list">
+        <div th:if="${results} and ${results.size()}">
+
+            <div th:each="result : ${results}">
+                <h3 th:text="${result.size() + ' result(s) for' + ${result.key}"></h3>
+
+                <div  th:each="route : ${result.value}">
+                    <table  th:fragment="single-route" class="route-listing">
+                        <tr>
+                            <th>Name</th>
+                            <td th:text="${route.name}"></td>
+                        </tr>
+                        <tr>
+                            <th>View</th>
+                            <td th:text="${route.area}"><a th:href="'/route/view/' + ${route.id}">View</a>/td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>
