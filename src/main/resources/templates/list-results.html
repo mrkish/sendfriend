@@ -11,24 +11,23 @@
     <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
 
     <div th:unless="${results} and ${results.size()}">
-        <h2>No Results</h2>
+        <h2>No results</h2>
     </div>
 
     <div th:fragment="results-list">
         <div th:if="${results} and ${results.size()}">
-
             <div th:each="result : ${results}">
                 <h3 th:text="${result.size() + ' result(s) for' + ${result.key}"></h3>
-
-                <div  th:each="route : ${result.value}">
-                    <table  th:fragment="single-route" class="route-listing">
+                <hr>
+                <div  th:each="item: ${result.value}">
+                    <table>
                         <tr>
                             <th>Name</th>
-                            <td th:text="${route.name}"></td>
+                            <td th:text="${item.value.name}"></td>
                         </tr>
                         <tr>
                             <th>View</th>
-                            <td th:text="${route.area}"><a th:href="'/route/view/' + ${route.id}">View</a>/td>
+                            <td><a th:href="'/' + ${result.key} + '/view/' + ${item.value.id}">View</a>/td>
                         </tr>
                     </table>
                 </div>
