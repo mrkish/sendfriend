@@ -1,11 +1,13 @@
 package com.sendfriend.service;
 
+import com.sendfriend.models.Area;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.data.AreaDao;
 import com.sendfriend.models.data.CragDao;
 import com.sendfriend.models.data.RouteDao;
-import com.sendfriend.models.forms.RouteForm;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 public class RouteService {
 
@@ -18,7 +20,10 @@ public class RouteService {
     @Autowired
     AreaDao areaDao;
 
-    public void addAndAssociateRoute(RouteForm routeForm) {
+    public void addAndAssociateRoute(Route route, String areaName) {
+
+        List<Area> area = areaDao.findByName(areaName);
+
 
     }
 }
