@@ -5,6 +5,7 @@ import com.sendfriend.models.Crag;
 import com.sendfriend.models.data.AreaDao;
 import com.sendfriend.models.data.CragDao;
 import com.sendfriend.models.data.UserDao;
+import com.sendfriend.models.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,7 +65,7 @@ public class CragController extends AbstractController {
     public String displayAddCragForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Crag");
-        model.addAttribute(new Crag());
+        model.addAttribute(new AddForm());
         model.addAttribute("areas", areaDao.findAll());
         if (request.getSession().getAttribute("user") != null) {
             model.addAttribute("user", request.getSession().getAttribute("user"));
@@ -74,7 +75,7 @@ public class CragController extends AbstractController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddCragForm(Model model, @ModelAttribute @Valid Crag crag, Errors errors, String area) {
+    public String processAddCragForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors, String area) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Crag");
@@ -88,6 +89,8 @@ public class CragController extends AbstractController {
         }
 
         List<Area> areaToSet = areaDao.findByName(area);
+
+        Crag crag = new Crag(form.getName(), form.getDescription());
 
         if(areaToSet.size() == 1) {
             crag.setArea(areaToSet.get(0));

@@ -3,6 +3,7 @@ package com.sendfriend.controllers;
 import com.sendfriend.models.Area;
 import com.sendfriend.models.data.AreaDao;
 import com.sendfriend.models.data.UserDao;
+import com.sendfriend.models.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,7 +39,7 @@ public class AreaController extends AbstractController {
     public String displayAddAreaForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Area");
-        model.addAttribute(new Area());
+        model.addAttribute(new AddForm());
         if (request.getSession().getAttribute("user") != null) {
             model.addAttribute("user", request.getSession().getAttribute("user"));
         }
@@ -47,13 +48,14 @@ public class AreaController extends AbstractController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddAreaForm(Model model, @ModelAttribute @Valid Area area, Errors errors) {
+    public String processAddAreaForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors) {
 
        if (errors.hasErrors()) {
            model.addAttribute("title", "Add Area");
            return "redirect:/area/add";
        }
 
+       Area area = new Area(form.getName(), form.getDescription());
        areaDao.save(area);
 
         return "redirect:/area/view/" + area.getId();
