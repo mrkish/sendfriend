@@ -11,5 +11,6 @@ import java.util.List;
 @Transactional
 public interface AreaDao extends CrudRepository<Area, Integer> {
     List<Area> findByName(String name);
+    List<Area> findByNameIgnoreCase(String name);
     Area findById(int id);
 }

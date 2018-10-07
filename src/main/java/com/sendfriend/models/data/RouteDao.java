@@ -11,5 +11,6 @@ import java.util.List;
 @Transactional
 public interface RouteDao extends CrudRepository<Route, Integer> {
     List<Route> findByName(String name);
+    List<Route> findByNameIgnoreCase(String name);
     Route findById(int id);
 }

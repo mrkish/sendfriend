@@ -17,13 +17,13 @@
     <div th:fragment="results-list">
         <div th:if="${results} and ${results.size()}">
             <div th:each="result : ${results}">
-                <h3 th:text="${result.size() + ' result(s) for' + ${result.key}"></h3>
+                <!--<h3 th:text="${results.size() + ' result(s) for' + ${result.key}"></h3>-->
                 <hr>
-                <div  th:each="item: ${result.value}">
+                <div  th:each="item : ${result.value}">
                     <table>
                         <tr>
                             <th>Name</th>
-                            <td th:text="${item.value.name}"></td>
+                            <td th:text="${item.name}"></td>
                         </tr>
                         <tr>
                             <th>View</th>
