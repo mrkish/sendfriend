@@ -3,15 +3,15 @@
 <head th:replace="fragments :: head"></head>
 <body class="container">
 
-<div th:object="${userProfile}">
-    <h2 th:field="*{username}" th:value="*{username}">Username</h2>
+<nav th:replace="fragments :: navigation"></nav>
+
+<div th:object="${user}">
+    <h2 th:field="*{username}" th:text="*{username}"></h2>
     <div>
         <ul>
             <li th:each="beta : *{betas}" th:text="{beta.name}">Name</li>
         </ul>
     </div>
-
-
 </div>
 
 <div th:replace="fragments :: footer"></div>

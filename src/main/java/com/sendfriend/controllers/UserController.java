@@ -170,8 +170,8 @@ public class UserController extends AbstractController {
         return "user/profile/share-beta";
     }
 
-    @RequestMapping(value = "profile/{userId}")
-    public String viewOtherUserProfile(Model model, @RequestParam int userId) {
+    @RequestMapping(value = "/user/view/{userId}")
+    public String viewOtherUserProfile(Model model, @PathVariable int userId) {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
@@ -182,10 +182,9 @@ public class UserController extends AbstractController {
        }
 
        User userToView = userDao.findById(userId);
-       String userProfile = userToView.getUsername();
        model.addAttribute("betas", userPublicBetas);
-       model.addAttribute("userProfile", userProfile);
-       model.addAttribute("title", userProfile + " | Profile");
+       model.addAttribute("user", userToView);
+       model.addAttribute("title", userToView.getUsername() + " | Profile");
 
         return "/user/view-profile";
    }
