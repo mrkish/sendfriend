@@ -84,8 +84,9 @@ public class CragController extends AbstractController {
         }
 
         if (areaDao.findByName(area) == null) {
-            Area newArea = new Area(area);
-            areaDao.save(newArea);
+            model.addAttribute("error", "Please add parent area first!");
+
+            return "crag/add";
         }
 
         List<Area> areaToSet = areaDao.findByName(area);

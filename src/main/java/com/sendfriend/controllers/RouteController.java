@@ -3,6 +3,7 @@ package com.sendfriend.controllers;
 import com.sendfriend.models.Beta;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.data.BetaDao;
+import com.sendfriend.models.data.CragDao;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class RouteController extends AbstractController {
 
     @Autowired
     private RouteDao routeDao;
+
+    @Autowired
+    CragDao cragDao;
 
     @RequestMapping(value = "")
     public String routeIndex(Model model, HttpServletRequest request) {
@@ -73,19 +77,24 @@ public class RouteController extends AbstractController {
         return "route/index";
     }
 
-    @RequestMapping(value = "edit", method = RequestMethod.GET)
-    public String displayEditRouteForm(Model model) {
+    @RequestMapping(value = "edit/{routeId}", method = RequestMethod.GET)
+    public String displayEditRouteForm(Model model, @PathVariable int routeId) {
 
+        Route routeToEdit = routeDao.findById(routeId);
         model.addAttribute("title", "Edit Route");
-        model.addAttribute(new Route());
+        model.addAttribute(routeToEdit);
 
         return "route/edit";
     }
 
     @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public String displayEditRouteForm(Model model, HttpServletRequest request, @ModelAttribute @Valid Route route, Errors errors) {
+    public String processEditRouteForm(int routeId, String areaName, String routeName, String cragName, String grade, double rating, String description, Errors errors) {
 
+        if (errors.hasErrors()){
+            return "redirect:route/edit/" + routeId;
+        }
 
+        Route route = routeDao.findById(routeId);
 
         return "redirect:/route/view/" + route.getId();
     }
