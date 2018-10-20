@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping(value = "beta")
@@ -227,5 +228,42 @@ public class BetaController extends AbstractController {
         }
 
         return "beta/view";
+    }
+
+    @RequestMapping(value = "edit/{betaId")
+    public String processEditBetaForm(Model model, @PathVariable int betaId, int routeId, String description, boolean isPublic) {
+
+        Beta beta = betaDao.findById(betaId);
+        Route route = routeDao.findById(routeId);
+
+        beta.setDescription(description);
+        beta.setIsPublic(isPublic);
+        beta.setRoute(route);
+        betaDao.save(beta);
+
+        return "redirect:beta/view/" + beta.getId();
+    }
+
+    @RequestMapping(value = "remove")
+    public String displayDeleteBetaForm(Model model, HttpServletRequest request) {
+
+        User currentUser = getUserFromSession(request.getSession());
+        User userFromDao = userDao.findById(currentUser.getId());
+        Set<Beta> userBetas = userDao.getUserBetaByUserId(userFromDao.getId());
+
+        model.addAttribute("betas", userBetas);
+        model.addAttribute("title", "Remove Betas");
+
+        return "beta/remove";
+    }
+
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String processDeleteBetaForm(@RequestParam int[] betasToDelete) {
+
+        for (int betaId : betasToDelete) {
+            betaDao.deleteById(betaId);
+        }
+
+        return "user/betas";
     }
 }

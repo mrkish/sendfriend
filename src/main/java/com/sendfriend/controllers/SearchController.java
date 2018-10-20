@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -43,34 +42,43 @@ public class SearchController extends AbstractController {
     }
 
     @RequestMapping(value = "results")
-    public HashMap<String, List<Object>> search(Model model, @ModelAttribute SearchForm searchForm) {
+    public String search(Model model, @ModelAttribute SearchForm searchForm) {
+
+        String keyword = searchForm.getKeyword();
 
         HashMap<String, List<Object>> results = new HashMap<>();
-        List<User> userResults = new ArrayList<>();
-        List<Route> routeResults = new ArrayList<>();
-        List<Crag> cragResults = new ArrayList<>();
-        List<Area> areaResults = new ArrayList<>();
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.USER)) {
-            userResults.add(userDao.findByUsername(searchForm.getKeyword()));
-            results.put("user", Collections.singletonList(userResults));
+            List<User> userResults = userDao.findByUsernameIgnoreCase(keyword);
+            if (!userResults.isEmpty()) {
+                results.put("user", Collections.singletonList(userResults));
+            }
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.ROUTE)) {
-            routeResults.add((Route) routeDao.findByName(searchForm.getKeyword()));
-            results.put("route", Collections.singletonList(routeResults));
+            List<Route> routeResults = routeDao.findByNameIgnoreCase(keyword);
+            if (!routeResults.isEmpty()) {
+                results.put("route", Collections.singletonList(routeResults));
+            }
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.CRAG)) {
-            cragResults.add((Crag) cragDao.findByName(searchForm.getKeyword()));
-            results.put("crag", Collections.singletonList(cragResults));
+            List<Crag> cragResults = cragDao.findByNameIgnoreCase(keyword);
+            if (!cragResults.isEmpty()) {
+                results.put("crag", Collections.singletonList(cragResults));
+            }
         }
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.AREA)) {
-            areaResults.add((Area) areaDao.findByName(searchForm.getKeyword()));
-            results.put("area", Collections.singletonList(areaResults));
+            List<Area> areaResults = areaDao.findByNameIgnoreCase(keyword);
+            if (!areaResults.isEmpty()) {
+                results.put("area", Collections.singletonList(areaResults));
+            }
         }
 
-        return results;
+        model.addAttribute("title", "Sendfriend | Search results for: " + keyword);
+        model.addAttribute("results", results);
+
+        return "search";
     }
 }
