@@ -75,7 +75,7 @@ public class CragController extends AbstractController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddCragForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors, String area) {
+    public String processAddCragForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors, int areaId) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Crag");
@@ -83,23 +83,27 @@ public class CragController extends AbstractController {
             return "redirect:/crag/add";
         }
 
-        if (areaDao.findByName(area) == null) {
+        if (areaDao.findById(areaId) == null) {
             model.addAttribute("error", "Please add parent area first!");
 
             return "crag/add";
         }
 
-        List<Area> areaToSet = areaDao.findByName(area);
-
+        Area areaToSet = areaDao.findById(areaId);
         Crag crag = new Crag(form.getName(), form.getDescription());
-
-        if(areaToSet.size() == 1) {
-            crag.setArea(areaToSet.get(0));
-            cragDao.save(crag);
-        } else {
-            cragDao.save(crag);
-        }
+        crag.setArea(areaToSet);
+        cragDao.save(crag);
 
         return "redirect:view/" + crag.getId();
     }
+
+    @ResponseBody
+    @RequestMapping(value = "api", method = RequestMethod.GET)
+    public List<Crag> getCragsJson(@RequestParam(value = "crag") String areaName) {
+
+        List<Crag> crags = cragDao.findByAreaName(areaName);
+
+        return crags;
+    }
+
 }

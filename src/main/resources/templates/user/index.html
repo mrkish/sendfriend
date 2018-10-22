@@ -27,7 +27,7 @@
     </div>
     <div class="card-body">
         <a th:href="@{'route/view/' + *{id}}" class="card-link">View Route</a>
-        <a th:href="@{'crag/view/' + *{crag}}" class="card-link">View Crag</a>
+        <a th:href="@{'crag/view/' + *{crag.id}}" class="card-link">View Crag</a>
     </div>
     <div class="card-footer text-muted" th:if="${featuredArea != null}" th:value="${featuredArea}">
     </div>

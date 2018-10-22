@@ -1,19 +1,18 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.Beta;
+import com.sendfriend.models.Crag;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.data.BetaDao;
 import com.sendfriend.models.data.CragDao;
 import com.sendfriend.models.data.RouteDao;
 import com.sendfriend.models.data.UserDao;
+import com.sendfriend.models.forms.RouteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -49,10 +48,11 @@ public class RouteController extends AbstractController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.GET)
-    public String displayRouteAddForm(Model model, HttpServletRequest request) {
+    public String displayRouteAddForm(Model model, HttpServletRequest request, @RequestParam(value = "cragId") int cragId) {
 
         model.addAttribute("title", "Add Route!");
-        model.addAttribute(new Route());
+        model.addAttribute("cragId", cragId);
+        model.addAttribute(new RouteForm());
         if (request.getSession().getAttribute("user") != null) {
             model.addAttribute("user", request.getSession().getAttribute("user"));
         }
@@ -61,18 +61,25 @@ public class RouteController extends AbstractController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processRouteAddForm(Model model, @ModelAttribute @Valid Route route, Errors errors) {
+    public String processRouteAddForm(Model model, @ModelAttribute @Valid RouteForm routeForm, Errors errors, @RequestParam(value = "cragId") int cragId) {
 
-        List<Route> routeNames = routeDao.findByName(route.getName());
+        List<Route> routeNames = routeDao.findByName(routeForm.getName());
+        Crag crag = cragDao.findById(cragId);
 
         if (errors.hasErrors()) {
-            model.addAttribute("route", route);
+            model.addAttribute("route", routeForm);
             model.addAttribute("title", "Add Route!");
-
             return "route/add";
         }
 
-        routeDao.save(route);
+        if (routeNames.size() > 0) {
+            model.addAttribute("error", "Crag already has route!");
+            return "route/add";
+        }
+
+        Route newRoute = new Route(routeForm.getName(), routeForm.getGrade(), routeForm.getDescription());
+        newRoute.setCrag(crag);
+        routeDao.save(newRoute);
 
         return "route/index";
     }

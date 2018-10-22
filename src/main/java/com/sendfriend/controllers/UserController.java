@@ -63,6 +63,7 @@ public class UserController extends AbstractController {
 
         model.addAttribute("title", "Sendfriend | Register New User");
         model.addAttribute(new RegisterForm());
+
         return "user/register";
     }
 
@@ -92,6 +93,7 @@ public class UserController extends AbstractController {
     public String displayLogin(Model model) {
         model.addAttribute("title", "Sendfriend | Login!");
         model.addAttribute(new LoginForm());
+
         return "user/login";
     }
 
@@ -99,7 +101,7 @@ public class UserController extends AbstractController {
     public String processLogin(@ModelAttribute @Valid LoginForm form, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
-            return "login";
+            return "user/login";
         }
 
         User theUser = userDao.findByUsername(form.getUsername());
@@ -107,12 +109,12 @@ public class UserController extends AbstractController {
 
         if (theUser == null) {
             errors.rejectValue("username", "user.invalid", "The given username does not exist.");
-            return "login";
+            return "user/login";
         }
 
         if (!theUser.isMatchingPassword(password)) {
             errors.rejectValue("password", "password.invalid", "Invalid password.");
-            return "login";
+            return "user/login";
         }
 
         setUserInSession(request.getSession(), theUser);
@@ -123,6 +125,7 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "logout", method = RequestMethod.GET)
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
+
         return "redirect:/login";
     }
 
@@ -131,6 +134,7 @@ public class UserController extends AbstractController {
 
        model.addAttribute("title", "Sendfriend! | Index");
        model.addAttribute("users", userDao.findAll());
+
        return "user/users";
     }
 
@@ -175,7 +179,7 @@ public class UserController extends AbstractController {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
        List<Beta> userPublicBetas = new ArrayList<>();
-//       Set<User> friends = user.getFriends();
+
        for(Beta beta : allUserBetas) {
            if (beta.getIsPublic()) {
                userPublicBetas.add(beta);
@@ -195,6 +199,7 @@ public class UserController extends AbstractController {
 
        model.addAttribute("title", "Sendfriend! | Users");
        model.addAttribute("users", userDao.findAll());
+
        return "user/users";
    }
 
@@ -204,9 +209,7 @@ public class UserController extends AbstractController {
        User currentUser = getUserFromSession(request.getSession());
        String username = currentUser.getUsername();
        User userFromDAO = userDao.findByUsername(username); // To open DB session/load collections
-
        Set<User> currentUserFriends = userFromDAO.getFriends();
-
        User userToFriend = userDao.findById(userId);
 
        if (currentUserFriends.contains(userToFriend)) {

@@ -5,11 +5,11 @@
 
 <nav th:replace="fragments :: navigation"></nav>
 
+<h1 th:text="${crag.name}"></h1>
+<h5 th:text="${crag.area.name}"></h5>
 <div class="row">
     <div class="col">
-        <div class="btn-group-vertical" data-toggle="buttons">
-            <!--<button type="button" class="btn " onclick="location.href='area/add';">Add Area</button>-->
-        </div>
+            <a class="btn btn-primary btn-lg"  th:value="${crag.id}" th:name="${cragId}" th:href="@{/route/add?cragId=} + ${crag.id}" role="button">Add Route</a>
     </div>
     <div class="col-10">
         <h2>All Routes</h2>

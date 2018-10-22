@@ -43,6 +43,14 @@ public class Route extends AbstractEntity {
         this.description = description;
     }
 
+    public Route(String name, String grade, String description, double rating, Crag crag) {
+        this.name = name;
+        this.grade = grade;
+        this.description = description;
+        this.rating = rating;
+        this.crag = crag;
+    }
+
     public String getName() {
         return name;
     }

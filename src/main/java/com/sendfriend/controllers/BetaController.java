@@ -51,15 +51,14 @@ public class BetaController extends AbstractController {
     @RequestMapping(value = "select-area")
     public String displaySelectAreaForm(Model model, HttpServletRequest request) {
 
-        if (request.getSession().getAttribute("user") == null) {
-            model.addAttribute("errors", "You can only add beta if you're a registered user.");
-
-            return "redirect:/beta";
-        } else if (request.getSession().getAttribute("user") != null) {
-            User username = (User) request.getSession().getAttribute("user");
-            User user = userDao.findByUsername(username.getUsername());
-            model.addAttribute("user", user);
-        }
+//        if (request.getSession().getAttribute("user") == null) {
+//            model.addAttribute("errors", "You can only add beta if you're a registered user.");
+//            return "redirect:/beta";
+//        } else if (request.getSession().getAttribute("user") != null) {
+//            User username = (User) request.getSession().getAttribute("user");
+//            User user = userDao.findByUsername(username.getUsername());
+//            model.addAttribute("user", user);
+//        }
 
         List<Area> areasOptions = (List<Area>) areaDao.findAll();
         areasOptions.add(new Area("none"));
