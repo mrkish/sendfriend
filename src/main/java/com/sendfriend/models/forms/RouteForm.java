@@ -13,9 +13,6 @@ public class RouteForm {
 
     private String grade;
 
-    @NotNull(message = "You must specify which climbing area the route is in.")
-    private String area;
-
     public String getName() {
         return name;
     }
@@ -48,11 +45,4 @@ public class RouteForm {
         this.grade = grade;
     }
 
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
 }

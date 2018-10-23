@@ -9,7 +9,7 @@
     <div class="card-header">Add New Route</div>
     <div class="card-body">
         <p class="card-text">
-<form method="post" style="max-width:600px;" th:object="${route}">
+<form method="post" style="max-width:600px;" th:object="${routeForm}">
     <div class="form-group">
         <label th:for="name">Name</label>
         <input class="form-control" th:field="*{name}" />
@@ -26,10 +26,6 @@
     <div class="form-group">
         <label th:for="grade">Rating</label>
         <input class="form-control" th:field="*{rating}" />
-    </div>
-    <div class="form-group">
-        <label th:for="area">Area</label>
-        <input class="form-control" name="${area}" />
     </div>
     <input type="submit" class="btn btn-success" value="Add Route" />
 </form>
