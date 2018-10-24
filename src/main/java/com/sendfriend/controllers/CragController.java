@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -99,11 +100,14 @@ public class CragController extends AbstractController {
 
     @ResponseBody
     @RequestMapping(value = "api", method = RequestMethod.GET)
-    public List<Crag> getCragsJson(@RequestParam(value = "crag") String areaName) {
+    public HashMap<Integer, String> getCragsJson(@RequestParam(value = "areaId") int areaId) {
 
-        List<Crag> crags = cragDao.findByAreaName(areaName);
-
-        return crags;
+        HashMap<Integer, String> response = new HashMap<Integer, String>();
+        List<Crag> crags = cragDao.findByAreaId(areaId);
+        for (Crag aCrag : crags) {
+            response.put(aCrag.getId(), aCrag.getName());
+        }
+        return response;
     }
 
 }
