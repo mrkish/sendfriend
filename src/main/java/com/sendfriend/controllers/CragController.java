@@ -98,16 +98,4 @@ public class CragController extends AbstractController {
         return "redirect:view/" + crag.getId();
     }
 
-    @ResponseBody
-    @RequestMapping(value = "api", method = RequestMethod.GET)
-    public HashMap<Integer, String> getCragsJson(@RequestParam(value = "areaId") int areaId) {
-
-        HashMap<Integer, String> response = new HashMap<Integer, String>();
-        List<Crag> crags = cragDao.findByAreaId(areaId);
-        for (Crag aCrag : crags) {
-            response.put(aCrag.getId(), aCrag.getName());
-        }
-        return response;
-    }
-
 }
