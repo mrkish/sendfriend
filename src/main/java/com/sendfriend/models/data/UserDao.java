@@ -15,9 +15,10 @@ import java.util.Set;
 @Transactional
 public interface UserDao extends CrudRepository<User, Integer> {
     User findByUsername(String username);
-    List<User> findByUsernameIgnoreCase(String username);
+    List<User> findByUsernameIgnoreCaseContaining(String username);
     User findById(int userId);
     User findUserById(Integer userId);
+
 
     @Transactional
     @Query("SELECT u " +

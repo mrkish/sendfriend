@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public interface CragDao extends CrudRepository<Crag, Integer> {
     List<Crag> findByName(String name);
-    List<Crag> findByNameIgnoreCase(String name);
+    List<Crag> findByNameIgnoreCaseContaining(String name);
     List<Crag> findByAreaId(int areaId);
     Crag findById(int id);
     Crag findByRoutes(List<Route> routes);
