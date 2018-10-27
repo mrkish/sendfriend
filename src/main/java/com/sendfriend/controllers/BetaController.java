@@ -2,6 +2,7 @@ package com.sendfriend.controllers;
 
 import com.sendfriend.models.*;
 import com.sendfriend.models.data.*;
+import com.sendfriend.models.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,162 +49,34 @@ public class BetaController extends AbstractController {
         return "beta/index";
     }
 
-    @RequestMapping(value = "select-area")
-    public String displaySelectAreaForm(Model model, HttpServletRequest request) {
+    @RequestMapping(value = "/add/routeId={routeId}")
+    public String displayAddBetaForm(Model model, HttpServletRequest request, @PathVariable int routeId) {
 
-//        if (request.getSession().getAttribute("user") == null) {
-//            model.addAttribute("errors", "You can only add beta if you're a registered user.");
-//            return "redirect:/beta";
-//        } else if (request.getSession().getAttribute("user") != null) {
-//            User username = (User) request.getSession().getAttribute("user");
-//            User user = userDao.findByUsername(username.getUsername());
-//            model.addAttribute("user", user);
-//        }
-
-        List<Area> areasOptions = (List<Area>) areaDao.findAll();
-        areasOptions.add(new Area("none"));
-
-        model.addAttribute("areas", areasOptions);
-        model.addAttribute("title", "Select Area");
-        if (request.getSession().getAttribute("user") != null) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
-        }
-
-        return "beta/select-area";
-    }
-
-    @RequestMapping(value = "add")
-    public String displayAddBetaForm(Model model, HttpServletRequest request, @RequestParam(required = false) String newAreaName, @RequestParam int areaId) {
-
-        if (request.getSession().getAttribute("user") == null) {
+        if (!model.containsAttribute("user")) {
             model.addAttribute("errors", "You can only add beta if you're a registered user.");
             return "beta/index";
-        } else if (request.getSession().getAttribute("user") != null) {
-            User username = (User) request.getSession().getAttribute("user");
-            User user = userDao.findByUsername(username.getUsername());
-            model.addAttribute("user", user);
         }
 
-        Area area = areaDao.findById(areaId);
-        if (!newAreaName.isEmpty() && area != null) {
-            model.addAttribute("title", "Select Area");
-            model.addAttribute("errors", "Please only select an area or enter a name for a new area.");
-
-            return "redirect:/beta/select-area";
-        }
-
-        if (newAreaName.isEmpty() && area != null) {
-            List<Crag> crags = area.getCrags();
-            model.addAttribute("crags", crags);
-            model.addAttribute("area", area);
-        } else if (!newAreaName.isEmpty()) {
-            Area newArea = new Area(newAreaName);
-            areaDao.save(newArea);
-            model.addAttribute("area", newArea);
-        }
-
+        Route route = routeDao.findById(routeId);
+        model.addAttribute("route", route);
         model.addAttribute("title", "Add Beta");
-        model.addAttribute(new Beta());
+        model.addAttribute("AddForm", new AddForm());
 
         return "beta/add";
     }
 
-    @RequestMapping(value = "process-add", method = RequestMethod.POST)
-    public String processAddBetaForm(Model model, HttpServletRequest request, @Valid Beta newBeta, Errors errors,
-                                     @RequestParam(required = false) Integer cragId, @RequestParam String routeName,
-                                     @RequestParam(required = false) String cragName, @RequestParam int userId,
-                                     @RequestParam int areaId, boolean isPublic) {
+    @RequestMapping(value = "/add/routeId={routeId}", method = RequestMethod.POST)
+    public String processAddBetaForm(@Valid AddForm addForm, Model model, Errors errors, int userId, @PathVariable int routeId, boolean isPublic) {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "Add Beta");
-            return "beta/add";
+            return "redirect:/add/routeId=" + routeId;
         }
 
+        Route route = routeDao.findById(routeId);
         User user = userDao.findById(userId);
-        Area area = areaDao.findById(areaId);
-
-        if (!cragName.isEmpty()) {
-            Crag newCrag = new Crag(cragName);
-            newCrag.setArea(area);
-            cragDao.save(newCrag);
-
-            area.addCrag(newCrag);
-            areaDao.save(area);
-
-            Route newRoute = new Route(routeName);
-            newRoute.setCrag(newCrag);
-            routeDao.save(newRoute);
-
-            newBeta.setRoute(newRoute);
-            newBeta.setIsPublic(isPublic);
-            newBeta.setUser(user);
-            betaDao.save(newBeta);
-
-            newRoute.addBeta(newBeta);
-            routeDao.save(newRoute);
-
-            model.addAttribute("beta", newBeta);
-            model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
-            model.addAttribute("routeId", newRoute.getId());
-            if (request.getSession().getAttribute("user") != null) {
-                model.addAttribute("user", request.getSession().getAttribute("user"));
-            }
-
-            return "redirect:/beta/view/" + newBeta.getId();
-        }
-
-        if (cragId == null && !cragName.isEmpty()) {
-            return "redirect:/beta/add";
-        }
-
-        int cragIdInt;
-        cragIdInt = cragId.intValue();
-        Crag crag = cragDao.findById(cragIdInt);
-
-        List<Route> foundRoutes = routeDao.findByName(routeName);
-        List<Route> cragRoutes = crag.getRoutes();
-        List<String> cragRouteNames = new ArrayList<>();
-        for (Route route : cragRoutes) {
-            cragRouteNames.add(route.getName());
-        }
-
-        if (cragRouteNames.contains(routeName)) {
-            if (foundRoutes.size() > 1) {
-                for (Route route : foundRoutes) {
-                    if (route.getCrag().equals(crag.getName())) {
-                        newBeta.setRoute(route);
-                        newBeta.setIsPublic(isPublic);
-                        newBeta.setUser(user);
-                        betaDao.save(newBeta);
-
-                        model.addAttribute("beta", newBeta);
-                        model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
-                        model.addAttribute("routeId", route.getId());
-                        if (request.getSession().getAttribute("user") != null) {
-                            model.addAttribute("user", request.getSession().getAttribute("user"));
-                        }
-
-                        return "redirect:/beta/view/" + newBeta.getId();
-                    }
-                }
-            }
-        }
-
-        Route newRoute = new Route(routeName);
-        newRoute.setCrag(crag);
-        routeDao.save(newRoute);
-
-        newBeta.setRoute(newRoute);
-        newBeta.setIsPublic(isPublic);
-        newBeta.setUser(user);
+        Beta newBeta = new Beta(addForm.getDescription(), isPublic, user, route, addForm.getName());
         betaDao.save(newBeta);
-
-        model.addAttribute("beta", newBeta);
-        model.addAttribute("title", "Viewing Beta for: " + newBeta.getRoute().getName());
-        model.addAttribute("routeId", newRoute.getId());
-        if (request.getSession().getAttribute("user") != null) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
-        }
 
         return "redirect:/beta/view/" + newBeta.getId();
     }

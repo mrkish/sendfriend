@@ -24,6 +24,8 @@ public class Beta extends AbstractEntity {
     @ManyToOne
     private Route route;
 
+    private String name;
+
     public Beta() {
         this.isPublic = false;
     }
@@ -47,6 +49,22 @@ public class Beta extends AbstractEntity {
         this.route = route;
         this.user = user;
         this.isPublic = isPublic;
+    }
+
+    public Beta(@NotNull String description, @NotNull boolean isPublic, User user, Route route, String name) {
+        this.description = description;
+        this.isPublic = isPublic;
+        this.user = user;
+        this.route = route;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {

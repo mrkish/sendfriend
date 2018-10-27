@@ -81,7 +81,7 @@ public class RouteController extends AbstractController {
         newRoute.setCrag(crag);
         routeDao.save(newRoute);
 
-        return "route/index";
+        return "redirect:route/view/" + newRoute.getId();
     }
 
     @RequestMapping(value = "edit/{routeId}", method = RequestMethod.GET)

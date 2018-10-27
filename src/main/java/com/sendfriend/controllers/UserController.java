@@ -37,10 +37,11 @@ public class UserController extends AbstractController {
     private BetaDao betaDao;
 
     @RequestMapping(value = "")
-    public String index(Model model) {
+    public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Sendfriend! | Index");
-        model.addAttribute("users", userDao.findAll());
+        User loggedinUser = getUserForModel(request);
+        model.addAttribute("user", loggedinUser);
 
         ArrayList<Route> routes = (ArrayList<Route>) routeDao.findAll();
         if (routes.size() > 1) {
