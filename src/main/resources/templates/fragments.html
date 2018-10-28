@@ -44,7 +44,7 @@
                 </li>
             </ul>
             <form th:action="@{/search/results}" class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" th:name="${searchTerm}" placeholder="Search" type="text">
+                <input class="form-control mr-sm-2" name="searchTerm" placeholder="Search" type="text">
                 <button class="btn btn-warning my-2 my-sm-0" type="submit">Search</button>
             </form>
         </div>

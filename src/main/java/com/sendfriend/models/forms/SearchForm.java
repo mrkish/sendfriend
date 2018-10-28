@@ -6,7 +6,7 @@ public class SearchForm {
 
     private SearchFieldType searchField = SearchFieldType.ALL;
 
-    private String keyword;
+    private StringBuilder keyword;
 
     public SearchFieldType getSearchField() { return searchField; }
 
@@ -14,7 +14,7 @@ public class SearchForm {
 
     public SearchFieldType[] getFields() { return fields; }
 
-    public String getKeyword() { return keyword; }
+    public StringBuilder getKeyword() { return keyword; }
 
-    public void setKeyword(String keyword) { this.keyword = keyword; }
+    public void setKeyword(StringBuilder keyword) { this.keyword = keyword; }
 }

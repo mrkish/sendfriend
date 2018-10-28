@@ -42,24 +42,28 @@ public class SearchController extends AbstractController {
     }
 
     @RequestMapping(value = "results")
-    public String search(Model model, String searchTerm, @ModelAttribute SearchForm searchForm) {
+    public String search(Model model, StringBuilder searchTerm, @ModelAttribute SearchForm searchForm) {
 
-        String keyword;
+        StringBuilder keywordHolder = new StringBuilder();
         HashMap<String, List<Object>> results = new HashMap<>();
 
-        if (searchForm.getKeyword() != null) {
-            if (searchForm.getKeyword().isEmpty() && searchTerm.isEmpty()) {
-                model.addAttribute("results", results);
-                return "search";
-            }
+        if ((searchTerm == null || searchTerm.toString().trim().isEmpty()) &&
+            (searchForm.getKeyword() == null || searchForm.getKeyword().toString().trim().isEmpty())) {
+
+            model.addAttribute("noSearchTerm", "No search term provided!");
+            return "search";
         }
 
-        if (searchTerm == null) {
-            keyword = searchForm.getKeyword();
-        } else {
-            keyword = searchTerm;
-            searchForm.setSearchField(SearchFieldType.ALL);
+        if (searchTerm == null || searchTerm.toString().trim().isEmpty()) {
+            keywordHolder = searchForm.getKeyword();
         }
+
+        if (searchForm.getKeyword() == null || searchForm.getKeyword().toString().trim().isEmpty()) {
+            searchForm.setSearchField(SearchFieldType.ALL);
+            keywordHolder = searchTerm;
+        }
+
+        String keyword = keywordHolder.toString();
 
         if (searchForm.getSearchField().equals(SearchFieldType.ALL) || searchForm.getSearchField().equals(SearchFieldType.USER)) {
             List<User> userResults = userDao.findByUsernameIgnoreCaseContaining(keyword);
