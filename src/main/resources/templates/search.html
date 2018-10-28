@@ -9,7 +9,8 @@
 
     <h1 th:text="${#strings.capitalizeWords(title)}"></h1>
 
-    <form th:action="@{/search/results}" th:object="${searchForm}">
+    <h2 th:if="${results.size()}">No results!</h2>
+    <form th:unless="${results.size()}" th:action="@{/search/results}" th:object="${searchForm}">
         <h2>Search by:</h2>
 
         <ul class="form-group">

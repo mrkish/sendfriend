@@ -40,9 +40,9 @@ public class RouteController extends AbstractController {
 
         model.addAttribute("routes", routeDao.findAll());
         model.addAttribute("title", "Routes");
-        if (request.getSession().getAttribute("user") != null) {
-            model.addAttribute("user", request.getSession().getAttribute("user"));
-        }
+//        if (request.getSession().getAttribute("user") != null) {
+//            model.addAttribute("user", request.getSession().getAttribute("user"));
+//        }
 
         return "route/index";
     }
@@ -112,7 +112,7 @@ public class RouteController extends AbstractController {
         Route route = routeDao.findById(routeId);
         model.addAttribute("title", "Route: " + route.getName());
         model.addAttribute("route", route);
-        List<Beta> betas = getPublicBetasList(route);
+        List<Beta> betas = betaDao.findPublicBetasByRouteId(routeId);
         model.addAttribute("betas", betas);
 
         return "route/view";
@@ -131,19 +131,6 @@ public class RouteController extends AbstractController {
         }
 
         return "beta/view" + beta.getId();
-    }
-
-    private List<Beta> getPublicBetasList(Route route) {
-
-        List<Beta> allBetas = route.getBetas();
-        List<Beta> publicBetas = new ArrayList<>();
-
-        for (Beta beta : allBetas) {
-            if (beta.getIsPublic()) {
-                publicBetas.add(beta);
-            }
-        }
-        return publicBetas;
     }
 
 }

@@ -12,6 +12,7 @@ import java.util.List;
 public interface BetaDao extends CrudRepository<Beta, Integer> {
     Beta findById(int id);
     List<Beta> findByUserId(int id);
+    List<Beta> findPublicBetasByRouteId(int routeId);
 
     void deleteById(int betaId);
 }
