@@ -89,19 +89,23 @@ public class RouteController extends AbstractController {
 
         Route routeToEdit = routeDao.findById(routeId);
         model.addAttribute("title", "Edit Route");
-        model.addAttribute(routeToEdit);
+        model.addAttribute("routeToEdit", routeToEdit);
 
         return "route/edit";
     }
 
-    @RequestMapping(value = "edit", method = RequestMethod.POST)
-    public String processEditRouteForm(int routeId, String areaName, String routeName, String cragName, String grade, double rating, String description, Errors errors) {
+    @RequestMapping(value = "/edit/{routeId}", method = RequestMethod.POST)
+    public String processEditRouteForm(@ModelAttribute @Valid Route routeToEdit, int routeId, Errors errors) {
 
         if (errors.hasErrors()){
-            return "redirect:route/edit/" + routeId;
+            return "redirect:route/edit/" + routeToEdit.getId();
         }
 
         Route route = routeDao.findById(routeId);
+        route.setName(routeToEdit.getName());
+        route.setGrade(routeToEdit.getGrade());
+        route.setDescription(routeToEdit.getDescription());
+        routeDao.save(route);
 
         return "redirect:/route/view/" + route.getId();
     }

@@ -95,9 +95,6 @@ public class BetaController extends AbstractController {
         model.addAttribute("title", "View Beta for " + route.getName());
         model.addAttribute("route", route);
         model.addAttribute("beta", beta);
-//        if (request.getSession().getAttribute("user") != null) {
-//            model.addAttribute("user", request.getSession().getAttribute("user"));
-//        }
 
         return "beta/view";
     }
