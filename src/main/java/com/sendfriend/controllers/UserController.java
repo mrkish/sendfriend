@@ -142,9 +142,11 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "profile")
     public String displayCurrentUserProfile(Model model, HttpServletRequest request) {
 
-        HttpSession session = request.getSession();
-        String username = getUserFromSession(session).getUsername();
-        User user = userDao.findByUsername(username);
+        User loggedInUser = getUserForModel(request);
+        if (loggedInUser == null) {
+            return "redirect:login";
+        }
+        User user = userDao.findById(loggedInUser.getId());
         model.addAttribute("title", user.getUsername() + " | Profile");
         model.addAttribute("betas", user.getBetas());
         model.addAttribute("friends", user.getFriends());
@@ -155,7 +157,9 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "profile/betas")
     public String displayUserBetas(Model model, HttpServletRequest request) {
 
-        User user = (User) request.getSession().getAttribute("user");
+//        User user = (User) request.getSession().getAttribute("user");
+        User loggedInUser = getUserForModel(request);
+        User user = userDao.findById(loggedInUser.getId());
         model.addAttribute("title", user.getUsername() + " | Betas");
         model.addAttribute("betas", betaDao.findByUserId(user.getId()));
 
@@ -165,9 +169,11 @@ public class UserController extends AbstractController {
     @RequestMapping(value = "profile/share-beta")
     public String displayShareBetaForm(Model model, HttpServletRequest request) {
 
-        User user = (User) request.getSession().getAttribute("user");
+//        User user = (User) request.getSession().getAttribute("user");
+        User loggedInUser = getUserForModel(request);
+        User user = userDao.findById(loggedInUser.getId());
         List<Beta> userBetas = new ArrayList<>();
-        userBetas = (List<Beta>) userDao.getUserBetaByUsername(user.getUsername());
+        userBetas = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
 
         model.addAttribute("betas", userBetas);
         model.addAttribute("title", "Share Beta");
@@ -207,9 +213,8 @@ public class UserController extends AbstractController {
    @RequestMapping(value = "user/add-friend/{userId}")
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
-       User currentUser = getUserFromSession(request.getSession());
-       String username = currentUser.getUsername();
-       User userFromDAO = userDao.findByUsername(username); // To open DB session/load collections
+       User loggedInUser = getUserForModel(request);
+       User userFromDAO = userDao.findById(loggedInUser.getId());
        Set<User> currentUserFriends = userFromDAO.getFriends();
        User userToFriend = userDao.findById(userId);
 
@@ -218,7 +223,7 @@ public class UserController extends AbstractController {
        } else {
            userFromDAO.addFriend(userToFriend);
            userDao.save(userFromDAO);
-           userToFriend.addFriend(currentUser);
+           userToFriend.addFriend(loggedInUser);
            userDao.save(userToFriend);
        }
 

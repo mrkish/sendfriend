@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -99,13 +96,23 @@ public class BetaController extends AbstractController {
         return "beta/view";
     }
 
-    @RequestMapping(value = "edit/{betaId")
-    public String processEditBetaForm(Model model, @PathVariable int betaId, int routeId, String description, boolean isPublic) {
+    @RequestMapping(value = "edit/{betaId}", method = RequestMethod.GET)
+    public String displayEditBetaForm(Model model, HttpServletRequest request, @PathVariable int betaId) {
 
-        Beta beta = betaDao.findById(betaId);
-        Route route = routeDao.findById(routeId);
+        Beta betaToEdit = betaDao.findById(betaId);
+        model.addAttribute("title", "Editing: " + betaToEdit.getName());
+        model.addAttribute("betaToEdit", betaToEdit);
 
-        beta.setDescription(description);
+        return "beta/edit";
+    }
+
+    @RequestMapping(value = "edit/{betaId}", method = RequestMethod.POST)
+    public String processEditBetaForm(Model model, @ModelAttribute Beta betaToEdit, @PathVariable int betaId, boolean isPublic) {
+
+        Beta beta = betaDao.findById(betaToEdit.getId());
+        Route route = routeDao.findById(beta.getRoute().getId());
+
+        beta.setDescription(beta.getDescription());
         beta.setIsPublic(isPublic);
         beta.setRoute(route);
         betaDao.save(beta);

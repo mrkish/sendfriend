@@ -88,14 +88,14 @@ public class RouteController extends AbstractController {
     public String displayEditRouteForm(Model model, @PathVariable int routeId) {
 
         Route routeToEdit = routeDao.findById(routeId);
-        model.addAttribute("title", "Edit Route");
+        model.addAttribute("title", "Editing: " + routeToEdit.getName());
         model.addAttribute("routeToEdit", routeToEdit);
 
         return "route/edit";
     }
 
     @RequestMapping(value = "/edit/{routeId}", method = RequestMethod.POST)
-    public String processEditRouteForm(@ModelAttribute @Valid Route routeToEdit, int routeId, Errors errors) {
+    public String processEditRouteForm(@ModelAttribute @Valid Route routeToEdit, @PathVariable int routeId, Errors errors) {
 
         if (errors.hasErrors()){
             return "redirect:route/edit/" + routeToEdit.getId();
