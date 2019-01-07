@@ -107,7 +107,7 @@ public class RouteController extends AbstractController {
         route.setDescription(routeToEdit.getDescription());
         routeDao.save(route);
 
-        return "redirect:/route/view/" + route.getId();
+        return "redirect:/view/" + route.getId();
     }
 
     @RequestMapping(value = "view/{routeId}", method = RequestMethod.GET)

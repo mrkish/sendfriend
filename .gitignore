@@ -24,4 +24,7 @@ dist/
 nbdist/
 .nb-gradle/
 
+### Vim/Ctags
+tags
+
 out/

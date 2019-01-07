@@ -9,9 +9,10 @@ import java.util.List;
 
 @Repository
 @Transactional
-public interface BetaDao extends CrudRepository<Beta, Integer> {
+public interface BetaDao extends CrudRepository<Beta, Integer>, BetaDaoCustom {
     Beta findById(int id);
     List<Beta> findByUserId(int id);
+    List<Beta> findByRouteId(int routeId);
     List<Beta> findPublicBetasByRouteId(int routeId);
 
     void deleteById(int betaId);

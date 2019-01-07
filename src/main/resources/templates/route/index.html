@@ -14,6 +14,8 @@
         <thead>
         <tr >
             <th scope="col">Name</th>
+            <th scope="col">Crag</th>
+            <th scope="col">Area</th>
             <th scope="col">Grade</th>
             <th scope="col">Rating</th>
             <th scope="col">Rate</th>
@@ -23,6 +25,8 @@
         <tbody>
         <tr class="table-default" th:each="route : ${routes}">
             <td th:text="*{route.name}"></td>
+            <td><a th:href="'/crag/view/' + *{route.crag.id}" th:text="*{route.crag.name}"></a></td>
+            <td><a th:href="'/area/view/' + *{route.crag.area.id}" th:text="*{route.crag.area.name}"></a></td>
             <td th:text="*{route.grade}"></td>
             <td th:text="*{route.rating}"></td>
             <td><a th:href="'/route/rate/' + ${route.id}">Rate</a></td>
@@ -31,6 +35,18 @@
         </tbody>
         </table>
     </div>
+    <!--<div>-->
+        <!--<ul>-->
+            <!--<li><input type="radio" name="locationSearchStyle" onclick="hideOrShow(0)">-->
+            <!--<label>Single Location</label></li>-->
+            <!--<li><input type="radio" name="locationSearchStyle" onclick="hideOrShow(1)">-->
+            <!--<label>Multiple Locations</label></li>-->
+        <!--</ul>-->
+    <!--</div>-->
+
+    <!--<div id="myDiv">-->
+        <!--<p>Test text.</p>-->
+    <!--</div>-->
 </div>
 
 <div th:replace="fragments :: footer"></div>

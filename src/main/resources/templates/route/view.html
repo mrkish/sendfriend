@@ -21,15 +21,17 @@
         <table class="table table-hover">
             <thead>
             <tr >
-                <th scope="col">Route</th>
+                <th scope="col">Beta Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">Submitter</th>
                 <th scope="col">View</th>
             </tr>
             </thead>
             <tbody>
             <tr class="table-default" th:each="beta : ${betas}">
-                <td th:text="*{beta.route.name}"></td>
+                <td th:text="*{beta.name}"></td>
                 <td th:text="*{beta.description}"></td>
+                <td th:text="*{beta.user.username}"></td>
                 <td><a th:href="'/beta/view/' + ${beta.id}">View</a></td>
             </tr>
             </tbody>

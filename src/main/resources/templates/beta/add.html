@@ -18,7 +18,7 @@
     </div>
     <div class="form-group">
         <label th:for="isPublic">Make public?</label>
-        <input type="checkbox" th:name="${isPublic}" th:checked="${true}" />
+        <input type="checkbox" name="isPublic" th:checked="${true}" />
     </div>
     <input type="hidden" name="routeId" th:value="${route.id}" />
     <input type="hidden" name="userId" th:value="${user.id}" />
