@@ -1,7 +1,7 @@
-package com.sendfriend.models.data;
+package com.sendfriend.repository;
 
-import com.sendfriend.models.Beta;
-import com.sendfriend.models.User;
+import com.sendfriend.domain.Beta;
+import com.sendfriend.domain.User;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

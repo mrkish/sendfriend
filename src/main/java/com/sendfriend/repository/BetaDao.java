@@ -1,6 +1,6 @@
-package com.sendfriend.models.data;
+package com.sendfriend.repository;
 
-import com.sendfriend.models.Beta;
+import com.sendfriend.domain.Beta;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

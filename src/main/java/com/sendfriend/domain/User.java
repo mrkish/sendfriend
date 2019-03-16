@@ -1,5 +1,7 @@
-package com.sendfriend.models;
+package com.sendfriend.domain;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;
@@ -12,6 +14,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
 public class User extends AbstractEntity {
 
     @NotNull
@@ -65,32 +69,8 @@ public class User extends AbstractEntity {
         return encoder.encode(password);
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
     public void setPwHash(String password) {
         this.pwHash = hashPassword(password);
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public List<Beta> getBetas() {
-        return betas;
-    }
-
-    public void setBetas(List<Beta> betas) {
-        this.betas = betas;
     }
 
     public void addFriend(User user) {
@@ -114,10 +94,6 @@ public class User extends AbstractEntity {
     public void setFriends(Set<User> friends) {
         this.friends.clear();
         this.friends.addAll(friends);
-    }
-
-    public Set<User> getFriends() {
-        return this.friends;
     }
 
     public boolean isMatchingPassword(String password) {

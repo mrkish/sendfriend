@@ -8,7 +8,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import javax.sql.DataSource;
 
 @SpringBootApplication
-@EntityScan("com.sendfriend.models")
+@EntityScan("com.sendfriend.domain")
 public class SendFriendApplication {
 
 	public static void main(String[] args) {

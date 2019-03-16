@@ -1,4 +1,4 @@
-package com.sendfriend.models.forms;
+package com.sendfriend.domain.forms;
 
 import javax.validation.constraints.NotNull;
 

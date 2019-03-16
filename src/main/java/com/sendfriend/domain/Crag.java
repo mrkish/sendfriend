@@ -1,4 +1,4 @@
-package com.sendfriend.models;
+package com.sendfriend.domain;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

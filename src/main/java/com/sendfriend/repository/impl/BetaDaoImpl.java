@@ -1,13 +1,13 @@
-package com.sendfriend.models.data;
+package com.sendfriend.repository.impl;
 
-import com.sendfriend.models.Beta;
+import com.sendfriend.domain.Beta;
+import com.sendfriend.repository.BetaDao;
+import com.sendfriend.repository.BetaDaoCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Transactional
 public class BetaDaoImpl implements BetaDaoCustom {
 
     @Autowired

@@ -1,13 +1,13 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Beta;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
-import com.sendfriend.models.data.BetaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.RouteDao;
-import com.sendfriend.models.data.UserDao;
-import com.sendfriend.models.forms.RouteForm;
+import com.sendfriend.domain.Beta;
+import com.sendfriend.domain.Crag;
+import com.sendfriend.domain.Route;
+import com.sendfriend.repository.BetaDao;
+import com.sendfriend.repository.CragDao;
+import com.sendfriend.repository.RouteDao;
+import com.sendfriend.repository.UserDao;
+import com.sendfriend.domain.forms.RouteForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller

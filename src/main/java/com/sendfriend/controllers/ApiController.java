@@ -1,11 +1,11 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Area;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
-import com.sendfriend.models.data.AreaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.RouteDao;
+import com.sendfriend.domain.Area;
+import com.sendfriend.domain.Crag;
+import com.sendfriend.domain.Route;
+import com.sendfriend.repository.AreaDao;
+import com.sendfriend.repository.CragDao;
+import com.sendfriend.repository.RouteDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

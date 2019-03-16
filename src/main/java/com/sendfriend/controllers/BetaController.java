@@ -1,8 +1,8 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.*;
-import com.sendfriend.models.data.*;
-import com.sendfriend.models.forms.AddForm;
+import com.sendfriend.domain.*;
+import com.sendfriend.repository.*;
+import com.sendfriend.domain.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Controller

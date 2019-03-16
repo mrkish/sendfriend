@@ -1,4 +1,4 @@
-package com.sendfriend;
+package com.sendfriend.config;
 
 import com.sendfriend.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;

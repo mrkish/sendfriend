@@ -1,12 +1,12 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Area;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
-import com.sendfriend.models.User;
-import com.sendfriend.models.data.*;
-import com.sendfriend.models.forms.SearchFieldType;
-import com.sendfriend.models.forms.SearchForm;
+import com.sendfriend.domain.Area;
+import com.sendfriend.domain.Crag;
+import com.sendfriend.domain.Route;
+import com.sendfriend.domain.User;
+import com.sendfriend.repository.*;
+import com.sendfriend.domain.forms.SearchFieldType;
+import com.sendfriend.domain.forms.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

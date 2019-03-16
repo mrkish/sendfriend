@@ -1,4 +1,4 @@
-package com.sendfriend.models.forms;
+package com.sendfriend.domain.forms;
 
 public enum SearchFieldType {
 

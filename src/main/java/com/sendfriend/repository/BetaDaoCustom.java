@@ -1,6 +1,6 @@
-package com.sendfriend.models.data;
+package com.sendfriend.repository;
 
-import com.sendfriend.models.Beta;
+import com.sendfriend.domain.Beta;
 
 import java.util.List;
 
