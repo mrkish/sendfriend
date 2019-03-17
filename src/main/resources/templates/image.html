@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<div th:if="${imageInsert}">
+    <center>
+        <img th:src="@{image/imageget/{myPathVariable}(myPathVariable=${imageinsert})}" alt="image failure" />
+    </center>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+</body>
+</html>

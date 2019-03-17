@@ -90,7 +90,7 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.GET)
+    @RequestMapping(value = "login")
     public String displayLogin(Model model) {
         model.addAttribute("title", "Sendfriend | Login!");
         model.addAttribute(new LoginForm());
@@ -98,7 +98,7 @@ public class UserController extends AbstractController {
         return "user/login";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @PostMapping(value = "login")
     public String processLogin(@ModelAttribute @Valid LoginForm form, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
@@ -123,14 +123,14 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "logout", method = RequestMethod.GET)
+    @RequestMapping(value = "logout")
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
 
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "user")
+    @GetMapping(value = "user")
     public String userIndex(Model model) {
 
        model.addAttribute("title", "Sendfriend! | Index");
@@ -201,16 +201,7 @@ public class UserController extends AbstractController {
         return "/user/view-profile";
    }
 
-   @RequestMapping(value = "user", method = RequestMethod.GET)
-   public String displayUserIndex(Model model) {
-
-       model.addAttribute("title", "Sendfriend! | Users");
-       model.addAttribute("users", userDao.findAll());
-
-       return "user/users";
-   }
-
-   @RequestMapping(value = "user/add-friend/{userId}")
+   @RequestMapping(value = "/user/add-friend/{userId}", method = RequestMethod.GET)
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
        User loggedInUser = getUserForModel(request);
