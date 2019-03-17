@@ -24,7 +24,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
 
         if (!nonAuthPages.contains(request.getRequestURI())) {
 
-            Integer userId = (Integer) request.getSession().getAttribute(AbstractController.userSessionKey);
+            Integer userId = (Integer) request.getSession().getAttribute(AbstractController.USER_SESSION_KEY);
 
             if (userId != null) {
                 User user = userDao.findUserById(userId);
