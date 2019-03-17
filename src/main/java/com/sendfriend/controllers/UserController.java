@@ -4,7 +4,7 @@ import com.sendfriend.domain.*;
 import com.sendfriend.repository.*;
 import com.sendfriend.domain.forms.LoginForm;
 import com.sendfriend.domain.forms.RegisterForm;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sendfriend.util.AppConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -21,27 +21,25 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequestMapping(value = "")
 public class UserController extends AbstractController {
 
-    @Autowired
-    private UserDao userDao;
+    private static final String USER_REGISTER = "user/register";
+    private static final String USER_LOGIN = "user/login";
+    private  static final String BETAS = "betas";
 
-    @Autowired
     private RouteDao routeDao;
-
-    @Autowired
-    private CragDao cragDao;
-
-    @Autowired
-    private AreaDao areaDao;
-
-    @Autowired
     private BetaDao betaDao;
 
-    @RequestMapping(value = "")
+    public UserController(RouteDao routeDao,
+                          BetaDao betaDao) {
+        this.routeDao = routeDao;
+        this.betaDao = betaDao;
+    }
+
+    @GetMapping(value = "")
     public String index(Model model, HttpServletRequest request) {
 
-        model.addAttribute("title", "Sendfriend! | Index");
+        model.addAttribute(AppConstants.TITLE, "Sendfriend! | Index");
         User loggedinUser = getUserForModel(request);
-        model.addAttribute("user", loggedinUser);
+        model.addAttribute(AppConstants.USER, loggedinUser);
 
         ArrayList<Route> routes = (ArrayList<Route>) routeDao.findAll();
         if (routes.size() > 1) {
@@ -53,34 +51,34 @@ public class UserController extends AbstractController {
                     model.addAttribute("featuredArea", featured.getCrag().getArea());
                 }
                 model.addAttribute("featured", featured);
-            } while (!model.containsAttribute("featured") || routes.size() == 0);
+            } while (!model.containsAttribute("featured") || routes.isEmpty());
         }
 
         return "user/index";
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.GET)
+    @GetMapping(value = "register")
     public String displayRegisterForm(Model model) {
 
-        model.addAttribute("title", "Sendfriend | Register New User");
+        model.addAttribute(AppConstants.TITLE, "Sendfriend | Register New User");
         model.addAttribute(new RegisterForm());
 
-        return "user/register";
+        return USER_REGISTER;
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @PostMapping(value = "register")
     public String processRegisterForm(@ModelAttribute @Valid RegisterForm form, Errors errors,
                                       HttpServletRequest request) {
 
         if (errors.hasErrors()) {
-            return "user/register";
+            return USER_REGISTER;
         }
 
         User foundName = userDao.findByUsername(form.getUsername());
 
         if (foundName != null) {
             errors.rejectValue("username", "username.alreadyexists", "A user with that username already exists.");
-            return "user/register";
+            return USER_REGISTER;
         }
 
         User newUser = new User(form.getUsername(), form.getPassword(), form.getEmail());
@@ -90,19 +88,19 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "login")
+    @GetMapping(value = "login")
     public String displayLogin(Model model) {
-        model.addAttribute("title", "Sendfriend | Login!");
+        model.addAttribute(AppConstants.TITLE, "Sendfriend | Login!");
         model.addAttribute(new LoginForm());
 
-        return "user/login";
+        return USER_LOGIN;
     }
 
     @PostMapping(value = "login")
     public String processLogin(@ModelAttribute @Valid LoginForm form, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
-            return "user/login";
+            return USER_LOGIN;
         }
 
         User theUser = userDao.findByUsername(form.getUsername());
@@ -110,12 +108,12 @@ public class UserController extends AbstractController {
 
         if (theUser == null) {
             errors.rejectValue("username", "user.invalid", "The given username does not exist.");
-            return "user/login";
+            return USER_LOGIN;
         }
 
         if (!theUser.isMatchingPassword(password)) {
             errors.rejectValue("password", "password.invalid", "Invalid password.");
-            return "user/login";
+            return USER_LOGIN;
         }
 
         setUserInSession(request.getSession(), theUser);
@@ -123,23 +121,23 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "logout")
+    @GetMapping(value = "logout")
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
 
         return "redirect:/login";
     }
 
-    @GetMapping(value = "user")
+    @GetMapping(value = AppConstants.USER)
     public String userIndex(Model model) {
 
-       model.addAttribute("title", "Sendfriend! | Index");
+       model.addAttribute(AppConstants.TITLE, "Sendfriend! | Index");
        model.addAttribute("users", userDao.findAll());
 
        return "user/users";
     }
 
-    @RequestMapping(value = "profile")
+    @GetMapping(value = "profile")
     public String displayCurrentUserProfile(Model model, HttpServletRequest request) {
 
         User loggedInUser = getUserForModel(request);
@@ -147,41 +145,38 @@ public class UserController extends AbstractController {
             return "redirect:login";
         }
         User user = userDao.findById(loggedInUser.getId());
-        model.addAttribute("title", user.getUsername() + " | Profile");
-        model.addAttribute("betas", user.getBetas());
+        model.addAttribute(AppConstants.TITLE, user.getUsername() + " | Profile");
+        model.addAttribute(BETAS, user.getBetas());
         model.addAttribute("friends", user.getFriends());
 
         return "user/profile/view";
     }
 
-    @RequestMapping(value = "profile/betas")
+    @GetMapping(value = "profile/betas")
     public String displayUserBetas(Model model, HttpServletRequest request) {
 
-//        User user = (User) request.getSession().getAttribute("user");
         User loggedInUser = getUserForModel(request);
         User user = userDao.findById(loggedInUser.getId());
-        model.addAttribute("title", user.getUsername() + " | Betas");
-        model.addAttribute("betas", betaDao.findByUserId(user.getId()));
+        model.addAttribute(AppConstants.TITLE, user.getUsername() + " | Betas");
+        model.addAttribute(BETAS, betaDao.findByUserId(user.getId()));
 
         return "user/profile/betas";
     }
 
-    @RequestMapping(value = "profile/share-beta")
+    @GetMapping(value = "profile/share-beta")
     public String displayShareBetaForm(Model model, HttpServletRequest request) {
 
-//        User user = (User) request.getSession().getAttribute("user");
         User loggedInUser = getUserForModel(request);
         User user = userDao.findById(loggedInUser.getId());
-        List<Beta> userBetas = new ArrayList<>();
-        userBetas = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
+        List<Beta> userBetas = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
 
-        model.addAttribute("betas", userBetas);
-        model.addAttribute("title", "Share Beta");
+        model.addAttribute(BETAS, userBetas);
+        model.addAttribute(AppConstants.TITLE, "Share Beta");
 
         return "user/profile/share-beta";
     }
 
-    @RequestMapping(value = "/user/view/{userId}")
+    @GetMapping(value = "/user/view/{userId}")
     public String viewOtherUserProfile(Model model, @PathVariable int userId) {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
@@ -194,14 +189,14 @@ public class UserController extends AbstractController {
        }
 
        User userToView = userDao.findById(userId);
-       model.addAttribute("betas", userPublicBetas);
-       model.addAttribute("user", userToView);
-       model.addAttribute("title", userToView.getUsername() + " | Profile");
+       model.addAttribute(BETAS, userPublicBetas);
+       model.addAttribute(AppConstants.USER, userToView);
+       model.addAttribute(AppConstants.TITLE, userToView.getUsername() + " | Profile");
 
         return "/user/view-profile";
    }
 
-   @RequestMapping(value = "/user/add-friend/{userId}", method = RequestMethod.GET)
+   @GetMapping(value = "/user/add-friend/{userId}")
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
        User loggedInUser = getUserForModel(request);

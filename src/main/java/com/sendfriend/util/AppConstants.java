@@ -12,6 +12,12 @@ public class AppConstants {
     public static final String BETA = "beta";
     public static final String CRAG = "crag";
     public static final String AREA = "area";
+    // Misc
+    public static final String TITLE = "title";
+    public static final String USERS = "Users";
+    public static final String AREAS = "Areas";
+    public static final String CRAGS = "Crags";
+    public static final String BETAS = "Betas";
     // Security
     public static final String HTPASSWD = ".htpasswd";
     public static final String HTACCESS = ".htaccess";
@@ -21,6 +27,7 @@ public class AppConstants {
                                                                                    HTPASSWD,
                                                                                    CROSSDOMAIN_XML,
                                                                                    CLIENT_ACCESS_POLICY_XML);
+
     private AppConstants() {
         throw new UnsupportedOperationException("Class cannot be instantiated");
     }

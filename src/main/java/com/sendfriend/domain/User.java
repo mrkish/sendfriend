@@ -28,6 +28,7 @@ public class User extends AbstractEntity {
     @Column(unique = true)
     private String email;
 
+
     @ManyToMany
     @JoinTable(name = "shares", joinColumns = @JoinColumn(name = "beta_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<Beta> receivedShares = new ArrayList<>();

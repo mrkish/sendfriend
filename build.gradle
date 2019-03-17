@@ -30,9 +30,9 @@ dependencies {
 	compile 'org.apache.tika:tika-parsers:1.13'
 	compile('mysql:mysql-connector-java')
 	runtime('org.springframework.boot:spring-boot-devtools')
+	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile('org.junit.jupiter:junit-jupiter-api:5.4.0')
-	testRuntime('org.junit.jupiter:junit-jupiter-engine:5.4.0')
 }
 
 bootRun {
