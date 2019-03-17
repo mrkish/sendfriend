@@ -32,7 +32,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "image")
-public class ImageController  {
+public class ImageController {
 
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
