@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
@@ -51,4 +52,43 @@
 
 <div th:replace="fragments :: footer"></div>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<div class="row">
+    <div class="col">
+</div>
+    <div class="col-10">
+        <h2>All Routes</h2>
+        <table class="table table-hover">
+        <thead>
+        <tr >
+            <th scope="col">Name</th>
+            <th scope="col">Grade</th>
+            <th scope="col">Rating</th>
+            <th scope="col">Rate</th>
+            <th scope="col">View</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="table-default" th:each="route : ${routes}">
+            <td th:text="*{route.name}"></td>
+            <td th:text="*{route.grade}"></td>
+            <td th:text="*{route.rating}"></td>
+            <td><a th:href="'/route/rate/' + ${route.id}">Rate</a></td>
+            <td><a th:href="'/route/view/' + ${route.id}">View</a></td>
+            </tr>
+        </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+</body>
+>>>>>>> develop
 </html>

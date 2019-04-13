@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org/">
 <head th:replace="fragments :: head"></head>
@@ -41,4 +42,47 @@
 
 <div th:replace="fragments :: footer"></div>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/">
+<head th:replace="fragments :: head"></head>
+<body class="container">
+
+<nav th:replace="fragments :: navigation"></nav>
+
+<div th:object="${route}"></div>
+<h2 th:text="*{route.name}"></h2>
+<span ><h3 th:text="*{route.crag.area.name} + ' | ' + *{route.crag.name}"></h3></span>
+<h3 th:text="*{route.grade}"></h3>
+<h3 th:text="*{route.rating}"></h3>
+<p th:text="*{route.description}"></p>
+<div class="row">
+    <div class="col">
+        <div class="col">
+            <a class="btn btn-primary btn-lg" th:if="${user != null}"  th:href="@{/beta/add/routeId=} + ${route.id}" role="button">Add Beta</a>
+    </div>
+    <div class="col-10">
+        <h2>All Public Betas</h2>
+        <table class="table table-hover">
+            <thead>
+            <tr >
+                <th scope="col">Route</th>
+                <th scope="col">Description</th>
+                <th scope="col">View</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="table-default" th:each="beta : ${betas}">
+                <td th:text="*{beta.route.name}"></td>
+                <td th:text="*{beta.description}"></td>
+                <td><a th:href="'/beta/view/' + ${beta.id}">View</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div th:replace="fragments :: footer"></div>
+</body>
+>>>>>>> develop
 </html>
