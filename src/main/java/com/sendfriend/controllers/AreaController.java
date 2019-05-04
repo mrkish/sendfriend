@@ -1,10 +1,9 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Area;
 import com.sendfriend.data.AreaDao;
 import com.sendfriend.data.UserDao;
+import com.sendfriend.models.Area;
 import com.sendfriend.models.forms.AddForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,13 +16,16 @@ import javax.validation.Valid;
 @RequestMapping(value = "area")
 public class AreaController extends AbstractController {
 
-    @Autowired
     private AreaDao areaDao;
-
-    @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "")
+    public AreaController(AreaDao areaDao,
+                          UserDao userDao) {
+        this.areaDao = areaDao;
+        this.userDao = userDao;
+    }
+
+    @GetMapping(value = "")
     public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Areas");
@@ -35,7 +37,7 @@ public class AreaController extends AbstractController {
         return "area/index";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.GET)
+    @GetMapping(value = "add")
     public String displayAddAreaForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Area");
@@ -47,7 +49,7 @@ public class AreaController extends AbstractController {
         return "area/add";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @PostMapping(value = "add")
     public String processAddAreaForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors) {
 
        if (errors.hasErrors()) {
@@ -61,7 +63,7 @@ public class AreaController extends AbstractController {
         return "redirect:/area/view/" + area.getId();
     }
 
-    @RequestMapping(value = "view/{areaId}")
+    @GetMapping(value = "view/{areaId}")
     public String viewArea(Model model, HttpServletRequest request, @PathVariable int areaId) {
 
         Area areaToView = areaDao.findById(areaId);

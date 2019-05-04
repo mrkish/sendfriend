@@ -1,9 +1,10 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.*;
 import com.sendfriend.data.*;
+import com.sendfriend.models.Beta;
+import com.sendfriend.models.Route;
+import com.sendfriend.models.User;
 import com.sendfriend.models.forms.AddForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -17,22 +18,25 @@ import java.util.Set;
 @RequestMapping(value = "beta")
 public class BetaController extends AbstractController {
 
-    @Autowired
     private UserDao userDao;
-
-    @Autowired
     private RouteDao routeDao;
-
-    @Autowired
     private CragDao cragDao;
-
-    @Autowired
     private AreaDao areaDao;
-
-    @Autowired
     private BetaDao betaDao;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    public BetaController(UserDao userDao,
+                          RouteDao routeDao,
+                          CragDao cragDao,
+                          AreaDao areaDao,
+                          BetaDao betaDao)  {
+        this.userDao = userDao;
+        this.routeDao = routeDao;
+        this.cragDao = cragDao;
+        this.areaDao = areaDao;
+        this.betaDao = betaDao;
+    }
+
+    @GetMapping(value = "")
     public String displayAllBeta(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Betas");
@@ -44,7 +48,7 @@ public class BetaController extends AbstractController {
         return "beta/index";
     }
 
-    @RequestMapping(value = "/add/routeId={routeId}")
+    @GetMapping(value = "/add/routeId={routeId}")
     public String displayAddBetaForm(Model model, HttpServletRequest request, @PathVariable int routeId) {
 
         if (!model.containsAttribute("user")) {
@@ -60,7 +64,7 @@ public class BetaController extends AbstractController {
         return "beta/add";
     }
 
-    @RequestMapping(value = "/add/routeId={routeId}", method = RequestMethod.POST)
+    @PostMapping(value = "/add/routeId={routeId}")
     public String processAddBetaForm(@Valid AddForm addForm, Model model, Errors errors, int userId, @PathVariable int routeId, boolean isPublic) {
 
         if (errors.hasErrors()) {
@@ -76,7 +80,7 @@ public class BetaController extends AbstractController {
         return "redirect:/beta/view/" + newBeta.getId();
     }
 
-    @RequestMapping(value = "view/{betaId}")
+    @GetMapping(value = "view/{betaId}")
     public String viewSingleBeta(Model model, HttpServletRequest request, @PathVariable int betaId) {
 
         Beta beta = betaDao.findById(betaId);
@@ -94,7 +98,7 @@ public class BetaController extends AbstractController {
         return "beta/view";
     }
 
-    @RequestMapping(value = "edit/{betaId}", method = RequestMethod.GET)
+    @GetMapping(value = "edit/{betaId}")
     public String displayEditBetaForm(Model model, HttpServletRequest request, @PathVariable int betaId) {
 
         Beta betaToEdit = betaDao.findById(betaId);
@@ -104,7 +108,7 @@ public class BetaController extends AbstractController {
         return "beta/edit";
     }
 
-    @RequestMapping(value = "edit/{betaId}", method = RequestMethod.POST)
+    @PostMapping(value = "edit/{betaId}")
     public String processEditBetaForm(Model model, @ModelAttribute Beta betaToEdit, @PathVariable int betaId, boolean isPublic) {
 
         Beta beta = betaDao.findById(betaToEdit.getId());
@@ -118,7 +122,7 @@ public class BetaController extends AbstractController {
         return "redirect:beta/view/" + beta.getId();
     }
 
-    @RequestMapping(value = "remove")
+    @GetMapping(value = "remove")
     public String displayDeleteBetaForm(Model model, HttpServletRequest request) {
 
         User currentUser = getUserFromSession(request.getSession());
@@ -131,7 +135,7 @@ public class BetaController extends AbstractController {
         return "beta/remove";
     }
 
-    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    @PostMapping(value = "remove")
     public String processDeleteBetaForm(@RequestParam int[] betasToDelete) {
 
         for (int betaId : betasToDelete) {

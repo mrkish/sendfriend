@@ -11,6 +11,8 @@ public class AbstractController {
 
     protected UserDao userDao;
 
+    public AbstractController() {}
+
     public AbstractController(UserDao userDao) {
         this.userDao = userDao;
     }
