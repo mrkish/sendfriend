@@ -1,16 +1,17 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.*;
 import com.sendfriend.data.*;
+import com.sendfriend.models.Beta;
+import com.sendfriend.models.Route;
+import com.sendfriend.models.User;
 import com.sendfriend.models.forms.LoginForm;
 import com.sendfriend.models.forms.RegisterForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,22 +22,25 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequestMapping(value = "")
 public class UserController extends AbstractController {
 
-    @Autowired
     private UserDao userDao;
-
-    @Autowired
     private RouteDao routeDao;
-
-    @Autowired
     private CragDao cragDao;
-
-    @Autowired
     private AreaDao areaDao;
-
-    @Autowired
     private BetaDao betaDao;
 
-    @RequestMapping(value = "")
+    public UserController(UserDao userDao,
+                          RouteDao routeDao,
+                          CragDao cragDao,
+                          AreaDao areaDao,
+                          BetaDao betaDao) {
+        this.userDao = userDao;
+        this.routeDao = routeDao;
+        this.cragDao = cragDao;
+        this.areaDao = areaDao;
+        this.betaDao = betaDao;
+    }
+
+    @GetMapping(value = "")
     public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Sendfriend! | Index");
@@ -59,7 +63,7 @@ public class UserController extends AbstractController {
         return "user/index";
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.GET)
+    @GetMapping(value = "register")
     public String displayRegisterForm(Model model) {
 
         model.addAttribute("title", "Sendfriend | Register New User");
@@ -68,7 +72,7 @@ public class UserController extends AbstractController {
         return "user/register";
     }
 
-    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @PostMapping(value = "register")
     public String processRegisterForm(@ModelAttribute @Valid RegisterForm form, Errors errors,
                                       HttpServletRequest request) {
 
@@ -90,7 +94,7 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.GET)
+    @GetMapping(value = "login")
     public String displayLogin(Model model) {
         model.addAttribute("title", "Sendfriend | Login!");
         model.addAttribute(new LoginForm());
@@ -98,7 +102,7 @@ public class UserController extends AbstractController {
         return "user/login";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
+    @PostMapping(value = "login")
     public String processLogin(@ModelAttribute @Valid LoginForm form, Errors errors, HttpServletRequest request) {
 
         if (errors.hasErrors()) {
@@ -123,14 +127,14 @@ public class UserController extends AbstractController {
         return "redirect:";
     }
 
-    @RequestMapping(value = "logout", method = RequestMethod.GET)
+    @GetMapping(value = "logout")
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate();
 
         return "redirect:/login";
     }
 
-    @RequestMapping(value = "user")
+    @GetMapping(value = "user")
     public String userIndex(Model model) {
 
        model.addAttribute("title", "Sendfriend! | Index");
@@ -139,7 +143,7 @@ public class UserController extends AbstractController {
        return "user/users";
     }
 
-    @RequestMapping(value = "profile")
+    @GetMapping(value = "profile")
     public String displayCurrentUserProfile(Model model, HttpServletRequest request) {
 
         User loggedInUser = getUserForModel(request);
@@ -154,10 +158,9 @@ public class UserController extends AbstractController {
         return "user/profile/view";
     }
 
-    @RequestMapping(value = "profile/betas")
+    @GetMapping(value = "profile/betas")
     public String displayUserBetas(Model model, HttpServletRequest request) {
 
-//        User user = (User) request.getSession().getAttribute("user");
         User loggedInUser = getUserForModel(request);
         User user = userDao.findById(loggedInUser.getId());
         model.addAttribute("title", user.getUsername() + " | Betas");
@@ -166,14 +169,12 @@ public class UserController extends AbstractController {
         return "user/profile/betas";
     }
 
-    @RequestMapping(value = "profile/share-beta")
+    @GetMapping(value = "profile/share-beta")
     public String displayShareBetaForm(Model model, HttpServletRequest request) {
 
-//        User user = (User) request.getSession().getAttribute("user");
         User loggedInUser = getUserForModel(request);
         User user = userDao.findById(loggedInUser.getId());
-        List<Beta> userBetas = new ArrayList<>();
-        userBetas = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
+        List<Beta> userBetas = (List<Beta>) userDao.getUserBetaByUserId(user.getId());
 
         model.addAttribute("betas", userBetas);
         model.addAttribute("title", "Share Beta");
@@ -181,7 +182,7 @@ public class UserController extends AbstractController {
         return "user/profile/share-beta";
     }
 
-    @RequestMapping(value = "/user/view/{userId}")
+    @GetMapping(value = "/user/view/{userId}")
     public String viewOtherUserProfile(Model model, @PathVariable int userId) {
 
        List<Beta> allUserBetas = betaDao.findByUserId(userId);
@@ -201,7 +202,7 @@ public class UserController extends AbstractController {
         return "/user/view-profile";
    }
 
-   @RequestMapping(value = "user", method = RequestMethod.GET)
+   @GetMapping(value = "user")
    public String displayUserIndex(Model model) {
 
        model.addAttribute("title", "Sendfriend! | Users");
@@ -210,7 +211,7 @@ public class UserController extends AbstractController {
        return "user/users";
    }
 
-   @RequestMapping(value = "user/add-friend/{userId}")
+   @GetMapping(value = "user/add-friend/{userId}")
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
        User loggedInUser = getUserForModel(request);
