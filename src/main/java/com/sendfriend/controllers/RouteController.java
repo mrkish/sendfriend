@@ -1,14 +1,13 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Beta;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
 import com.sendfriend.data.BetaDao;
 import com.sendfriend.data.CragDao;
 import com.sendfriend.data.RouteDao;
 import com.sendfriend.data.UserDao;
+import com.sendfriend.models.Beta;
+import com.sendfriend.models.Crag;
+import com.sendfriend.models.Route;
 import com.sendfriend.models.forms.RouteForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -22,31 +21,31 @@ import java.util.List;
 @RequestMapping(value = "route")
 public class RouteController extends AbstractController {
 
-    @Autowired
     private UserDao userDao;
-
-    @Autowired
     private BetaDao betaDao;
-
-    @Autowired
     private RouteDao routeDao;
+    private CragDao cragDao;
 
-    @Autowired
-    CragDao cragDao;
+    public RouteController(UserDao userDao,
+                           BetaDao betaDao,
+                           RouteDao routeDao,
+                           CragDao cragDao) {
+        this.userDao = userDao;
+        this.betaDao = betaDao;
+        this.routeDao = routeDao;
+        this.cragDao = cragDao;
+    }
 
-    @RequestMapping(value = "")
+    @GetMapping(value = "")
     public String routeIndex(Model model, HttpServletRequest request) {
 
         model.addAttribute("routes", routeDao.findAll());
         model.addAttribute("title", "Routes");
-//        if (request.getSession().getAttribute("user") != null) {
-//            model.addAttribute("user", request.getSession().getAttribute("user"));
-//        }
 
         return "route/index";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.GET)
+    @GetMapping(value = "add")
     public String displayRouteAddForm(Model model, HttpServletRequest request, @RequestParam(value = "cragId") int cragId) {
 
         model.addAttribute("title", "Add Route!");
@@ -59,7 +58,7 @@ public class RouteController extends AbstractController {
         return "route/add";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @PostMapping(value = "add")
     public String processRouteAddForm(Model model, @ModelAttribute @Valid RouteForm routeForm, Errors errors, @RequestParam(value = "cragId") int cragId) {
 
         List<Route> routeNames = routeDao.findByName(routeForm.getName());
@@ -71,7 +70,7 @@ public class RouteController extends AbstractController {
             return "route/add";
         }
 
-        if (routeNames.size() > 0) {
+        if (routeNames.isEmpty()) {
             model.addAttribute("error", "Crag already has route!");
             return "route/add";
         }
@@ -83,7 +82,7 @@ public class RouteController extends AbstractController {
         return "redirect:route/view/" + newRoute.getId();
     }
 
-    @RequestMapping(value = "edit/{routeId}", method = RequestMethod.GET)
+    @GetMapping(value = "edit/{routeId}")
     public String displayEditRouteForm(Model model, @PathVariable int routeId) {
 
         Route routeToEdit = routeDao.findById(routeId);
@@ -93,7 +92,7 @@ public class RouteController extends AbstractController {
         return "route/edit";
     }
 
-    @RequestMapping(value = "/edit/{routeId}", method = RequestMethod.POST)
+    @PostMapping(value = "/edit/{routeId}")
     public String processEditRouteForm(@ModelAttribute @Valid Route routeToEdit, @PathVariable int routeId, Errors errors) {
 
         if (errors.hasErrors()){
@@ -109,7 +108,7 @@ public class RouteController extends AbstractController {
         return "redirect:/view/" + route.getId();
     }
 
-    @RequestMapping(value = "view/{routeId}", method = RequestMethod.GET)
+    @GetMapping(value = "view/{routeId}")
     public String displaySingleRoute(Model model, @PathVariable int routeId) {
 
         Route route = routeDao.findById(routeId);
@@ -121,7 +120,7 @@ public class RouteController extends AbstractController {
         return "route/view";
     }
 
-    @RequestMapping(value = "view/{routeId}?beta={betaId}")
+    @GetMapping(value = "view/{routeId}?beta={betaId}")
     public String viewRouteSingleBeta(Model model, HttpServletRequest request, @PathVariable int betaId, @PathVariable int routeId) {
 
         Beta beta = betaDao.findById(betaId);
