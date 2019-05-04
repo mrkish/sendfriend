@@ -4,7 +4,7 @@ import com.sendfriend.models.Area;
 import com.sendfriend.models.Crag;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
-import com.sendfriend.models.data.*;
+import com.sendfriend.data.*;
 import com.sendfriend.models.forms.SearchFieldType;
 import com.sendfriend.models.forms.SearchForm;
 import org.springframework.beans.factory.annotation.Autowired;

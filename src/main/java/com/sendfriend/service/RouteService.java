@@ -2,9 +2,9 @@ package com.sendfriend.service;
 
 import com.sendfriend.models.Area;
 import com.sendfriend.models.Route;
-import com.sendfriend.models.data.AreaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.RouteDao;
+import com.sendfriend.data.AreaDao;
+import com.sendfriend.data.CragDao;
+import com.sendfriend.data.RouteDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

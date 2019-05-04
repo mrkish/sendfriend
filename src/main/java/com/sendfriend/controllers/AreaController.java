@@ -1,8 +1,8 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.Area;
-import com.sendfriend.models.data.AreaDao;
-import com.sendfriend.models.data.UserDao;
+import com.sendfriend.data.AreaDao;
+import com.sendfriend.data.UserDao;
 import com.sendfriend.models.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

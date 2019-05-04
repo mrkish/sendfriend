@@ -1,4 +1,4 @@
-package com.sendfriend.models.data;
+package com.sendfriend.data;
 
 import com.sendfriend.models.Area;
 import org.springframework.data.repository.CrudRepository;

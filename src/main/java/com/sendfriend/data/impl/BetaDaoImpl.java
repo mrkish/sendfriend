@@ -1,5 +1,7 @@
-package com.sendfriend.models.data;
+package com.sendfriend.data.impl;
 
+import com.sendfriend.data.BetaDao;
+import com.sendfriend.data.BetaDaoCustom;
 import com.sendfriend.models.Beta;
 import org.springframework.beans.factory.annotation.Autowired;
 

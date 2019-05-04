@@ -2,9 +2,9 @@ package com.sendfriend.controllers;
 
 import com.sendfriend.models.Area;
 import com.sendfriend.models.Crag;
-import com.sendfriend.models.data.AreaDao;
-import com.sendfriend.models.data.CragDao;
-import com.sendfriend.models.data.UserDao;
+import com.sendfriend.data.AreaDao;
+import com.sendfriend.data.CragDao;
+import com.sendfriend.data.UserDao;
 import com.sendfriend.models.forms.AddForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "crag")

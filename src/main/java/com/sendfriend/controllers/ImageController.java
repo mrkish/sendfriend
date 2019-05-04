@@ -1,7 +1,7 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.domain.Image;
-import com.sendfriend.repository.ImageRepository;
+import com.sendfriend.repository.ImageDao;
 import com.sendfriend.util.AppConstants;
 import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.detect.Detector;
@@ -37,9 +37,9 @@ public class ImageController {
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
 
-    private ImageRepository imageRepository;
+    private ImageDao imageRepository;
 
-    public ImageController(ImageRepository imageRepository) {
+    public ImageController(ImageDao imageRepository) {
         this.imageRepository = imageRepository;
     }
 

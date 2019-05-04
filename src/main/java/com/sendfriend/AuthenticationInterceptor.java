@@ -2,7 +2,7 @@ package com.sendfriend;
 
 import com.sendfriend.controllers.AbstractController;
 import com.sendfriend.models.User;
-import com.sendfriend.models.data.UserDao;
+import com.sendfriend.data.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 

@@ -1,7 +1,7 @@
 package com.sendfriend.controllers;
 
 import com.sendfriend.models.*;
-import com.sendfriend.models.data.*;
+import com.sendfriend.data.*;
 import com.sendfriend.models.forms.LoginForm;
 import com.sendfriend.models.forms.RegisterForm;
 import org.springframework.beans.factory.annotation.Autowired;
