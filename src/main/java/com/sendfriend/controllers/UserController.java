@@ -202,15 +202,6 @@ public class UserController extends AbstractController {
         return "/user/view-profile";
    }
 
-   @GetMapping(value = "user")
-   public String displayUserIndex(Model model) {
-
-       model.addAttribute("title", "Sendfriend! | Users");
-       model.addAttribute("users", userDao.findAll());
-
-       return "user/users";
-   }
-
    @GetMapping(value = "user/add-friend/{userId}")
     public String addFriend(Model model, HttpServletRequest request, @PathVariable int userId) {
 
