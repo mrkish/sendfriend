@@ -1,12 +1,11 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Area;
-import com.sendfriend.models.Crag;
 import com.sendfriend.data.AreaDao;
 import com.sendfriend.data.CragDao;
 import com.sendfriend.data.UserDao;
+import com.sendfriend.models.Area;
+import com.sendfriend.models.Crag;
 import com.sendfriend.models.forms.AddForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -19,16 +18,19 @@ import javax.validation.Valid;
 @RequestMapping(value = "crag")
 public class CragController extends AbstractController {
 
-    @Autowired
     private CragDao cragDao;
-
-    @Autowired
     private UserDao userDao;
-
-    @Autowired
     private AreaDao areaDao;
 
-    @RequestMapping(value = "")
+    public CragController(CragDao cragDao,
+                          UserDao userDao,
+                          AreaDao areaDao) {
+        this.cragDao = cragDao;
+        this.userDao = userDao;
+        this.areaDao = areaDao;
+    }
+
+    @GetMapping(value = "")
     public String index(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Crags");
@@ -40,7 +42,7 @@ public class CragController extends AbstractController {
         return "crag/index";
     }
 
-    @RequestMapping(value = "view/{cragId}")
+    @GetMapping(value = "view/{cragId}")
     public String viewSingleCrag(Model model, HttpServletRequest request, @PathVariable int cragId) {
 
         Crag crag = cragDao.findById(cragId);
@@ -60,7 +62,7 @@ public class CragController extends AbstractController {
         return "crag/view";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.GET)
+    @GetMapping(value = "add")
     public String displayAddCragForm(Model model, HttpServletRequest request) {
 
         model.addAttribute("title", "Add Crag");
@@ -73,7 +75,7 @@ public class CragController extends AbstractController {
         return "crag/add";
     }
 
-    @RequestMapping(value = "add", method = RequestMethod.POST)
+    @PostMapping(value = "add")
     public String processAddCragForm(Model model, @ModelAttribute @Valid AddForm form, Errors errors, int areaId) {
 
         if (errors.hasErrors()) {
