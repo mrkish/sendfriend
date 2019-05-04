@@ -1,8 +1,7 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.User;
 import com.sendfriend.data.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sendfriend.models.User;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,8 +9,11 @@ import javax.servlet.http.HttpSession;
 
 public class AbstractController {
 
-    @Autowired
     protected UserDao userDao;
+
+    public AbstractController(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     public static final String userSessionKey = "user_id";
 
