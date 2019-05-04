@@ -1,15 +1,18 @@
 package com.sendfriend.controllers;
 
+import com.sendfriend.data.AreaDao;
+import com.sendfriend.data.CragDao;
+import com.sendfriend.data.RouteDao;
+import com.sendfriend.data.UserDao;
 import com.sendfriend.models.Area;
 import com.sendfriend.models.Crag;
 import com.sendfriend.models.Route;
 import com.sendfriend.models.User;
-import com.sendfriend.data.*;
 import com.sendfriend.models.forms.SearchFieldType;
 import com.sendfriend.models.forms.SearchForm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -21,19 +24,22 @@ import java.util.List;
 @RequestMapping(value = "search")
 public class SearchController extends AbstractController {
 
-    @Autowired
     private UserDao userDao;
-
-    @Autowired
     private RouteDao routeDao;
-
-    @Autowired
     private CragDao cragDao;
-
-    @Autowired
     private AreaDao areaDao;
 
-    @RequestMapping(value = "")
+    public SearchController(UserDao userDao,
+                            RouteDao routeDao,
+                            CragDao cragDao,
+                            AreaDao areaDao) {
+        this.userDao = userDao;
+        this.routeDao = routeDao;
+        this.cragDao = cragDao;
+        this.areaDao = areaDao;
+    }
+
+    @GetMapping(value = "")
     public String search(Model model) {
 
         model.addAttribute("title", "Sendfriend | Search");
@@ -41,7 +47,7 @@ public class SearchController extends AbstractController {
         return "search";
     }
 
-    @RequestMapping(value = "results")
+    @GetMapping(value = "results")
     public String search(Model model, StringBuilder searchTerm, @ModelAttribute SearchForm searchForm) {
 
         StringBuilder keywordHolder = new StringBuilder();
