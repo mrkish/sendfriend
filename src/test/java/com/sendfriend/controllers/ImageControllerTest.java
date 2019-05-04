@@ -1,6 +1,6 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.repository.ImageRepository;
+import com.sendfriend.data.ImageDao;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -26,13 +26,13 @@ class ImageControllerTest {
     private WebApplicationContext wac;
 
     @Autowired
-    private ImageRepository imageRepository;
+    private ImageDao imageDao;
 
     private MockMvc mockMvc;
 
     @Before
     void setUp() {
-        imageRepository = mock(ImageRepository.class);
+        imageDao = mock(ImageDao.class);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
     }
 

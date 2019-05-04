@@ -1,4 +1,4 @@
-package com.sendfriend;
+package com.sendfriend.config;
 
 import com.sendfriend.controllers.AbstractController;
 import com.sendfriend.models.User;

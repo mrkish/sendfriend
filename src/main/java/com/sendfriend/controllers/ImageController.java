@@ -1,7 +1,7 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.domain.Image;
-import com.sendfriend.repository.ImageDao;
+import com.sendfriend.models.Image;
+import com.sendfriend.data.ImageDao;
 import com.sendfriend.util.AppConstants;
 import org.apache.tika.detect.DefaultDetector;
 import org.apache.tika.detect.Detector;
@@ -37,10 +37,10 @@ public class ImageController {
     private static final List<String> ALLOWED_MIME_TYPES = Arrays.asList("image/jpeg", "image/png", "image/gif");
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
 
-    private ImageDao imageRepository;
+    private ImageDao imageDao;
 
-    public ImageController(ImageDao imageRepository) {
-        this.imageRepository = imageRepository;
+    public ImageController(ImageDao imageDao) {
+        this.imageDao = imageDao;
     }
 
     public String displayImageIndex(Model model, HttpServletRequest request) {
@@ -63,7 +63,7 @@ public class ImageController {
             Image newImage = new Image();
             newImage.setFileBytes(file.getBytes());
             newImage.setFileName(file.getOriginalFilename());
-            imageRepository.save(newImage);
+            imageDao.save(newImage);
             redirectAttributes.addFlashAttribute("message", "Upload successful!");
         } catch (IOException e)  {
             logger.error("Failed to upload image named : {} : from IP address: {}", file.getOriginalFilename(), request.getRemoteAddr());
@@ -77,7 +77,7 @@ public class ImageController {
 
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        Optional<Image> requested = imageRepository.findById(imageId);
+        Optional<Image> requested = imageDao.findById(imageId);
         if (requested.isPresent()) {
             byte[] imageContent = requested.get().getFileBytes();
             httpHeaders.setCacheControl(CacheControl.noCache().getHeaderValue());
