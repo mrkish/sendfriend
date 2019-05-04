@@ -1,14 +1,13 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Area;
-import com.sendfriend.models.Crag;
-import com.sendfriend.models.Route;
 import com.sendfriend.data.AreaDao;
 import com.sendfriend.data.CragDao;
 import com.sendfriend.data.RouteDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sendfriend.models.Area;
+import com.sendfriend.models.Crag;
+import com.sendfriend.models.Route;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,16 +18,19 @@ import java.util.List;
 @RequestMapping(value = "api")
 public class ApiController {
 
-    @Autowired
     AreaDao areaDao;
-
-    @Autowired
     CragDao cragDao;
-
-    @Autowired
     RouteDao routeDao;
 
-    @RequestMapping(value = "crags", method = RequestMethod.GET)
+    public ApiController(AreaDao areaDao,
+                         CragDao cragDao,
+                         RouteDao routeDao) {
+        this.areaDao = areaDao;
+        this.cragDao = cragDao;
+        this.routeDao = routeDao;
+    }
+
+    @GetMapping(value = "crags")
     public HashMap<Integer, String> getCragsJson(@RequestParam(value = "areaId") int areaId) {
 
         HashMap<Integer, String> response = new HashMap<Integer, String>();
@@ -39,7 +41,7 @@ public class ApiController {
         return response;
     }
 
-    @RequestMapping(value = "routes", method = RequestMethod.GET)
+    @GetMapping(value = "routes")
     public HashMap<Integer, String> getRoutesJson(@RequestParam(value = "cragId") int cragId) {
 
         HashMap<Integer, String> response = new HashMap<Integer, String>();
@@ -50,7 +52,7 @@ public class ApiController {
         return response;
     }
 
-    @RequestMapping(value = "areas")
+    @GetMapping(value = "areas")
     public HashMap<Integer, String> getAreasJson() {
 
         HashMap<Integer, String> response = new HashMap<Integer, String>();
