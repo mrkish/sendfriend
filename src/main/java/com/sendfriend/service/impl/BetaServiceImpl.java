@@ -1,4 +1,6 @@
 package com.sendfriend.service.impl;
 
-public class BetaServiceImpl {
+import com.sendfriend.service.BetaService;
+
+public class BetaServiceImpl implements BetaService {
 }
