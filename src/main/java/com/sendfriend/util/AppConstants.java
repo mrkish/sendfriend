@@ -23,7 +23,7 @@ public class AppConstants {
     public static final String HTACCESS = ".htaccess";
     public static final String CROSSDOMAIN_XML = "crossdomain.xml";
     public static final String CLIENT_ACCESS_POLICY_XML = "clientaccesspolicy.xml";
-    public static final List<String> DISALLOWD_FILE_TYPES = Arrays.asList(HTACCESS,
+    public static final List<String> DISALLOWED_FILE_TYPES = Arrays.asList(HTACCESS,
                                                                                    HTPASSWD,
                                                                                    CROSSDOMAIN_XML,
                                                                                    CLIENT_ACCESS_POLICY_XML);

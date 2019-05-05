@@ -53,7 +53,7 @@ public class ImageController {
         boolean imageFileTypeCheck = ALLOWED_MIME_TYPES.contains(detectMimeType(file.getInputStream(), file.getOriginalFilename()));
 
         if ((file.isEmpty() || (!imageFileTypeCheck)) ||
-                AppConstants.DISALLOWD_FILE_TYPES.contains(file.getName())) {
+                AppConstants.DISALLOWED_FILE_TYPES.contains(file.getName())) {
             logger.error("Rejected file import from IP address: {}", request.getRemoteAddr());
             redirectAttributes.addFlashAttribute("message", "Please select an image file for uploading.");
             return "redirect:image";

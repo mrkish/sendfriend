@@ -3,7 +3,7 @@ package com.sendfriend.models;
 import javax.persistence.*;
 
 @Entity
-public class Image {
+public class Image extends AbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
