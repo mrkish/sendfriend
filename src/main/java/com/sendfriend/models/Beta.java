@@ -14,7 +14,7 @@ public class Beta extends AbstractEntity {
     @NotNull
     private boolean isPublic = false;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "shares", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "beta_id"))
     private List<User> shares = new ArrayList<>();
 
