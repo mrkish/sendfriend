@@ -46,7 +46,7 @@ class UploadServiceTest {
     }
 
     @Test
-    void processUploadTest_ExpectFileTypeFailure() throws IOException {
+    void processUploadTest_ExpectContentTypeFailure() throws IOException {
         MockMultipartFile file = new MockMultipartFile("image.jpg", "image.jpg", "text/plain", new byte[80]);
         boolean result = cut.processUpload(file);
 
