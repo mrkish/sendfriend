@@ -1,19 +1,14 @@
 package com.sendfriend.controllers;
 
-import com.sendfriend.models.Image;
 import com.sendfriend.data.ImageDao;
-import com.sendfriend.util.AppConstants;
-import org.apache.tika.detect.DefaultDetector;
-import org.apache.tika.detect.Detector;
-import org.apache.tika.io.TikaInputStream;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.mime.MimeTypes;
+import com.sendfriend.models.Image;
+import com.sendfriend.service.UploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,9 +32,12 @@ public class ImageController {
     private Logger logger = LoggerFactory.getLogger(ImageController.class);
 
     private ImageDao imageDao;
+    private UploadService uploadService;
 
-    public ImageController(ImageDao imageDao) {
+    public ImageController(ImageDao imageDao,
+                           UploadService uploadService) {
         this.imageDao = imageDao;
+        this.uploadService = uploadService;
     }
 
     public String displayImageIndex(Model model, HttpServletRequest request) {
@@ -50,23 +47,13 @@ public class ImageController {
 
     @PostMapping(value = "upload")
     public String processImageUpload(HttpServletRequest request, RedirectAttributes redirectAttributes, MultipartFile file) throws IOException {
-        boolean imageFileTypeCheck = ALLOWED_MIME_TYPES.contains(detectMimeType(file.getInputStream(), file.getOriginalFilename()));
 
-        if ((file.isEmpty() || (!imageFileTypeCheck)) ||
-                AppConstants.DISALLOWED_FILE_TYPES.contains(file.getName())) {
-            logger.error("Rejected file import from IP address: {}", request.getRemoteAddr());
+        if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select an image file for uploading.");
             return "redirect:image";
         }
-
-        try {
-            Image newImage = new Image();
-            newImage.setFileBytes(file.getBytes());
-            newImage.setFileName(file.getOriginalFilename());
-            imageDao.save(newImage);
+        if (uploadService.processUpload(file)) {
             redirectAttributes.addFlashAttribute("message", "Upload successful!");
-        } catch (IOException e)  {
-            logger.error("Failed to upload image named : {} : from IP address: {}", file.getOriginalFilename(), request.getRemoteAddr());
         }
 
         return "redirect:image";
@@ -86,13 +73,4 @@ public class ImageController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    private static String detectMimeType(InputStream inputStream, String fileName) throws  IOException {
-        final Detector detector = new DefaultDetector(MimeTypes.getDefaultMimeTypes());
-
-        TikaInputStream tikaInputStream = TikaInputStream.get(inputStream);
-        Metadata metadata = new Metadata();
-        metadata.add(Metadata.RESOURCE_NAME_KEY, fileName);
-
-        return detector.detect(tikaInputStream, metadata).toString();
-    }
 }

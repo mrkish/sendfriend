@@ -38,17 +38,19 @@ public class UploadServiceImpl implements UploadService {
                 !DISALLOWED_FILE_TYPES.contains(file.getOriginalFilename()));
 
         if (imageFileTypeCheck && securityCheck) {
-            Image newImage = new Image(file.getBytes());
-            newImage.setFileName(file.getName());
-            imageDao.save(newImage);
+            try {
+                Image newImage = new Image(file.getBytes());
+                newImage.setFileName(file.getName());
+                imageDao.save(newImage);
 
-            LOGGER.info("Saving image to database | Size : {} | Filename : {}", file.getSize(), file.getName());
-            result = true;
-        } else {
-            LOGGER.warn("File upload rejected | Size: {} | Filename : {} | ContentType : {}",
-                    file.getSize(),
-                    file.getName(),
-                    file.getContentType());
+                LOGGER.info("Saving image to database | Size : {} | Filename : {}", file.getSize(), file.getName());
+                result = true;
+            } catch (IOException e) {
+                LOGGER.warn("File upload rejected | Size: {} | Filename : {} | ContentType : {}",
+                        file.getSize(),
+                        file.getName(),
+                        file.getContentType());
+            }
         }
         return result;
     }
