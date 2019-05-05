@@ -5,10 +5,13 @@ import com.sendfriend.data.CragDao;
 import com.sendfriend.data.RouteDao;
 import com.sendfriend.models.Area;
 import com.sendfriend.models.Route;
+import com.sendfriend.service.RouteService;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class RouteServiceImpl {
+@Service
+public class RouteServiceImpl implements RouteService {
 
     RouteDao routeDao;
     CragDao cragDao;
