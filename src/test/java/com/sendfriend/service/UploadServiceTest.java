@@ -32,7 +32,7 @@ class UploadServiceTest {
         MockMultipartFile file = new MockMultipartFile("name", "name", "image/jpeg", new byte[]{});
         boolean result = cut.processUpload(file);
 
-        assertThat(result).as("Empty files are not accepted")
+        assertThat(result).as("Empty files are rejected")
                 .isFalse();
     }
 
@@ -59,7 +59,7 @@ class UploadServiceTest {
         MockMultipartFile file = new MockMultipartFile("image.jpg", "image.jpg", "image/jpeg", new byte[80]);
         boolean result = cut.processUpload(file);
 
-        assertThat(result).as("Disallowed file types are rejected")
+        assertThat(result).as("Image uploads of the correct content type and file size are allowed")
                 .isFalse();
     }
 
