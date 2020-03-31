@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "api")
@@ -31,9 +32,9 @@ public class ApiController {
     }
 
     @GetMapping(value = "crags")
-    public HashMap<Integer, String> getCragsJson(@RequestParam(value = "areaId") int areaId) {
+    public Map<Integer, String> getCragsJson(@RequestParam(value = "areaId") int areaId) {
 
-        HashMap<Integer, String> response = new HashMap<Integer, String>();
+        Map<Integer, String> response = new HashMap<>();
         List<Crag> crags = cragDao.findByAreaId(areaId);
         for (Crag aCrag : crags) {
             response.put(aCrag.getId(), aCrag.getName());
@@ -42,9 +43,9 @@ public class ApiController {
     }
 
     @GetMapping(value = "routes")
-    public HashMap<Integer, String> getRoutesJson(@RequestParam(value = "cragId") int cragId) {
+    public Map<Integer, String> getRoutesJson(@RequestParam(value = "cragId") int cragId) {
 
-        HashMap<Integer, String> response = new HashMap<Integer, String>();
+        Map<Integer, String> response = new HashMap<>();
         List<Route> routes = routeDao.findByCragId(cragId);
         for (Route aRoute : routes) {
             response.put(aRoute.getId(), aRoute.getName());
@@ -53,9 +54,9 @@ public class ApiController {
     }
 
     @GetMapping(value = "areas")
-    public HashMap<Integer, String> getAreasJson() {
+    public Map<Integer, String> getAreasJson() {
 
-        HashMap<Integer, String> response = new HashMap<Integer, String>();
+        Map<Integer, String> response = new HashMap<>();
         List<Area> areas = (List<Area>) areaDao.findAll();
         for (Area anArea : areas) {
             response.put(anArea.getId(), anArea.getName());
